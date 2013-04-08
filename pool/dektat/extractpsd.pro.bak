@@ -1,0 +1,214 @@
+
+;+
+; NAME:
+; EXTRACTPSD
+;
+; PURPOSE:
+; This procedure performs the analysis of a single dektat file and return the
+; values in variables. For processing more than one file, or generating plots
+; and outputs, use MULTIPSD (that calls EXTRACTPSD).
+;
+; CATEGORY:
+; Dektat
+;
+; CALLING SEQUENCE:
+; EXTRACTPSD, Filename
+;
+; INPUTS:
+; Filename:  The dektat cvs (comma separated values) data file
+;
+; 
+; INPUT KEYWORD PARAMETERS:
+; ROI_UM: 2-elements array with start and end of the region of interest (values in um).
+; NBINS: number of bins to use for histogram generation.
+; 
+; OUTPUTS:
+; Describe any outputs here.  For example, "This function returns the
+; foobar superflimpt version of the input array."  This is where you
+; should also document the return value for functions.
+;
+; OPTIONAL OUTPUTS:
+; X_ROI_POINTS:  
+; Y_ROI_POINTS:
+; FREQ: frequencies over which the PSD is calculated (in )
+; PSD: Corresponding PSD value (in )
+; ZLOCATIONS
+; ZHIST
+; XRAW
+; YRAW
+; LEVEL_COEFF
+; SCAN_PARS
+; NORMPARS
+; FITPSD
+; WINDOW
+; XOFFSET
+; LEVELPARTIAL
+; PARTIALSTATS
+;
+;
+; EXTERNAL DEPENDENCIES:
+; range, file_extension, readnamelistvar, newline, stripext, histostats
+; vector, prof2psd
+;
+;
+; MODIFICATION HISTORY:
+;   Written by: Vincenzo Cotroneo, 18 Jan 2011.
+;-
+
+function level2,y,coeff=coeff
+  ;remove piston, tilt and sag
+  ;(i.e. mean, line and second order legendre polynomial)
+  ;TODO: extend to a generic grade using recursion formola to generate npolinomyal
+  
+  grade=3
+  N=n_elements(Y)
+  yres=Y
+  x=vector(-1.d,1.d,n) ;xvector
+  L=max(x,/nan)-min(x,/nan)
+  coeff=fltarr(grade)
+  
+  ;legendre normalized polynomials
+  Leg0=sqrt(1.d/2)
+  Leg1=x*sqrt(3.d/2)
+  Leg2=(3.*x^2-1)/2*sqrt(5.d/2)
+  
+  a0=total(y*Leg0,/nan)*L/n
+  yres=y-a0*Leg0
+  
+  a1=total(y*Leg1,/nan)*L/n
+  Yres=Yres-a1*Leg1
+
+  a2=total(y*Leg2,/nan)*L/n
+  sag=a2*Leg2
+  Yres=Yres-sag
+  
+  coeff=[a0,a1,a2]
+  
+  return, Yres
+
+end
+
+function level,x,y,coeff=coeff,degree=degree,partialdegree=partialdegree,partialstats=partialstats
+;partialdegree is used to compute rms, PV and ra for comparison with the values from the machine
+
+if n_elements(degree) eq 0 then degree=2
+coeff = poly_fit(X, Y, Degree,yfit=yfit)
+
+if n_elements(partialdegree) ne 0 then begin
+  pc=coeff[0:partialdegree]
+  reconstructed=dblarr(n_elements(x))
+  for i=0,partialdegree do begin
+    reconstructed=reconstructed+pc[i]*x^i
+  endfor
+  pr=reconstructed-y
+  rms=sqrt(total(pr^2,/nan)/n_elements(pr))
+  ra=total(abs(pr),/nan)/n_elements(pr)
+  pv=range(pr,/size)
+  partialstats=[rms,ra,pv]
+endif
+
+return,y-yfit ;return residuals
+end
+
+
+pro extractpsd,filename,roi_um=roi_um,nbins=nbins,$ 
+    x_roi_points=x_roi,y_roi_points=y_roi,freq=f,psd=psd,zlocations=zlocations,zhist=zhist,$ 
+    xraw=x,yraw=y,level_coeff=coeff,scan_pars=scan_pars,$
+    normpars=normpars,fitpsd=fitpsd,window=window,xoffset=xoffset,$
+    levelPartial=levelPartial,partialStats=partialStats
+    
+;xoffset in um
+;levelPartial contains the partial level
+ext=file_extension(filename,basename)
+folder=file_dirname(filename)
+
+readcol,filename,xx,yy,skip=40,delimiter=','
+
+;read scan parameters
+tmp=readnamelistvar(filename,'Sclen',separator=',')
+tmp=strsplit(tmp,',',/extract)
+scanlen=float(tmp[0])
+;if strtrim(tmp[1],2) ne 'um' then message, 'Unrecognized unit of measure for scan lenght, unit: '+strtrim(tmp[0],2)
+npoints=long(readnamelistvar(filename,'NumPts',separator=','))
+zrange=strsplit(readnamelistvar(filename,'Mrange',separator=','),/extract) ;to remove unit of measure
+zrange=float(zrange[0])
+step_um=float(readnamelistvar(filename,'Hsf',separator=','))
+stylus_rad=float(readnamelistvar(filename,'Stylus Type,Radius',separator=':'))
+if step_um*npoints ne  scanlen then begin
+  msg='Scan lenght, npoints and step length do not agree:'+newline()+$
+      'Scan Len: '+strtrim(string(scanlen))+newline()+$
+      'Step Len: '+strtrim(string(step_um))+newline()+$
+      'Npoints: '+strtrim(string(npoints))+newline()+$
+      '-----------------------------'
+   message,msg
+endif
+scan_pars=[stylus_rad,scanlen,npoints,step_um,zrange,roi_um[0],roi_um[1]]
+
+x=double(xx)+xoffset ;in um
+y=double(yy) ;in Angstrom
+x=x[0:npoints-1]
+y=y[0:npoints-1]
+
+;convert all lenghts in angstrom
+x=x*10000
+xstep=step_um*10000.
+nyRange=[1./(Npoints*xstep),1./(2*xstep)]*10^7 ;Nyquist range in mm^-1
+
+;select the ROI, at the end x_roi and y_roi will contain the values inside the roi
+if n_elements(roi_um) eq 2  then begin
+  roi_start=value_locate(x,(roi_um[0]+xoffset)*10000.)+1
+  roi_end=value_locate(x,(roi_um[1]+xoffset)*10000.)
+  roi_start= (npoints-2 < roi_start)
+  roi_end=(0>roi_end)
+  x_roi=x[roi_start:roi_end]
+  y_roi=y[roi_start:roi_end]
+  npoints_roi=roi_end-roi_start+1
+  scanlen=(roi_um[1]-roi_um[0])*10000.
+  print,'Selected ROI: ['+strtrim(string(roi_um[0]))+'-'+strtrim(string(roi_um[1]))+' um]'
+  print,'points :'+strtrim(string(roi_start))+'-'+strtrim(string(roi_end))+']'
+endif else begin
+  print,'No ROI selected'
+  x_roi=x
+  y_roi=y
+  npoints_roi=npoints
+endelse
+
+;leveling
+y_roi=level(x_roi,y_roi,coeff=coeff,degree=2,partialdegree=levelPartial,partialstats=partialstats) ;level(y_roi,coeff=coeff)
+coeff=reform(coeff,3)
+writecol,stripext(filename,/full)+'_level.dat',x_roi,y_roi,header='X(um) Y(A)_leveled_data'
+print,'min, max, PV',min(y_roi),max(y_roi),max(y_roi)-min(y_roi)
+
+if n_elements(window) ne 0 then begin 
+  if strlowcase(window) eq 'hanning' then hanning=1
+endif
+psd=prof2psd(x_roi,y_roi,f=f,/positive_only,hanning=hanning)
+
+;;histogram of heights
+zstats=histostats(y_roi,title='Distribution of heights (A)',$
+    nbins=nbins,$
+    background=255,color=0,position=12,locations=zlocations,$
+    hist=zhist,xtitle='z (A)',ytitle='Fraction',/normalize,$
+    min=min,max=max,/noplot)
+
+;psd
+;normalization
+if arg_present(normpars) ne 0 then begin
+  f2=f
+  psd2=psd
+  integral = 2*INT_TABULATED( F2,psd2,/sort ) ;the factor 2 to include the negative frequencies 
+  var=zstats[7]
+  print,'integralpsd=',integral,' variance=',var
+  psd=psd*var/integral
+  normpars=[sqrt(integral),sqrt(var),var/integral]
+end
+
+if arg_present(fitpsd) ne 0 then begin
+  Result=PSD_FIT(F,psd,PARS)
+  fitpsd=pars
+end
+
+print,"Frequency in the range: ",min(f),'-',max(f)
+
+end
+

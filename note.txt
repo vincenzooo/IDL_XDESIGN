@@ -1,0 +1,35 @@
+########################################
+3/12/2008
+function in, valuetotest,vector,which=which
+;test if <valuetotest> is present in <vector>,
+;return 1 if present, 0 if not, raise error if <valuetotest> is not
+;a singlevalue, if <which> is set return the index of the first element
+;of <vector> equal to <valuetotest>.
+
+########################################
+3/12/2008
+
+function wherein, array, values, Count, COMPLEMENT=complement, $
+	NCOMPLEMENT=ncomplement,which=which
+;Check if each of the elements of <array> is in <values>.
+;The function uses the function "in".
+;RETURN VALUES:
+;If <which> is set return return an array of the same length than <array>,
+;	with the index of the corresponding element in <values> or -1
+;	(if the element is not in <values>).
+;If <which> is not set return an array with the indexes of the elements of <array>
+; that are in <values>
+;--------
+;OPTIONS (as in the where funtion)
+;Count: A named variable that will receive the number of nonzero
+;elements found in Array_Expression.
+;COMPLEMENT:a named variable that receives the subscripts of the elements of <array>
+;not found in <values>, gives -1 if empty
+;NCOMPLEMENT: number of elements of <array> not found in <values>
+
+###########################################
+3/4/08
+read_anglevec
+;generate a vector of off-axis angles in radians from the fortran namelist
+;in a file of settings for the offAxis ray-tracing program
+

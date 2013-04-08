@@ -1,0 +1,18 @@
+	xplot3d,[0,0],[0,0],[0,0],$
+	xrange=[-300.,300.],yrange=[-300.,300.],zrange=[-300.,300.],/isotropic
+
+	for i=0,100 do begin
+		xplot3d,[xorigin[i],ximp1[i],ximp2[i]],$
+		 [yorigin[i],yimp1[i],yimp2[i]],$
+		 [h1,zimp1[i],zimp2[i]],linestyle=0,/overplot
+	endfor
+
+
+
+;for i=0,10 do begin ;n_elements(stopped)/3-1 do begin
+;	xplot3d,[ximp1[stopped],ximp2[stopped]],$
+;	 [yimp1[stopped],yimp2[stopped]],$
+;	 [zimp1[stopped],zimp2[stopped]],symbol=oSymbol,linestyle=6,/isotropic,/overplot
+;endfor
+
+end

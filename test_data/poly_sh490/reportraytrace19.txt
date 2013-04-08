@@ -1,0 +1,12 @@
+      490.344898777253700      477.688545217506900      474.502355263415200
+      464.931509045640800
+ seed:       62772
+ value1:   4.109849992259336E-001
+ 
+ geometrical area for raytracing:       96.225204247841850
+ --geometrical raytracing--
+ start= 06:10:41
+ end= 06:10:52
+ --focal plane analisys--
+ start= 06:10:52
+ end= 06:11:11

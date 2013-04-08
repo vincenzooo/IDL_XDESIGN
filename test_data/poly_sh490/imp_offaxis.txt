@@ -1,0 +1,87 @@
+ &impdir                                                                                            
+ WORKDIR = 'poly_test       '                                                                       
+ DIRORIGIN = 'partenza               '                                                              
+ DIRRISULT = 'poly_sh490   '                                                                        
+/                                                                                                   
+                                                                                                    
+&somma                                                                                              
+numeropar=1                                                                                         
+controllaener=1                                                                                     
+/                                                                                                   
+                                                                                                    
+&plotPar                                                                                            
+En_min=1                                                                                            
+En_max=10                                                                                           
+npoints=51                                                                                          
+MatRifTot='pt.dat'                                                                                  
+SpessoreRifTot=10000                                                                                
+totrough=3                                                                                          
+/                                                                                                   
+                                                                                                    
+&CreateDiams                                                                                        
+FieldOfViewDeg = 2d0                                                                                
+thickM=0                                                                                            
+thickQ=2.0                                                                                          
+WallDensity=2.3                                                                                     
+profileType='uu'                                                                                    
+/                                                                                                   
+                                                                                                    
+&geopars                                                                                            
+useStartDirFlag_int= 0                                                                              
+nshDaImp=1                                                                                          
+F_LENGTHdaImp_m  = 5.0                                                                              
+F_HEIGHTdaImp_cm =  13.43905                                                                        
+/                                                                                                   
+                                                                                                    
+&diammax                                                                                            
+massimo = 494.3535                                                                                  
+/                                                                                                   
+                                                                                                    
+&impRayTrace                                                                                        
+nSamplePoints=10000                                                                                 
+ang0Arcmin=0                                                                                        
+ang1Arcmin=45                                                                                       
+pasa=5                                                                                              
+seedval = 62772                                                                                     
+writeImpactPoints=1                                                                                 
+CreateFileShells=1                                                                                  
+NameFileShells='hs2009F10_thsx.dat'                                                                 
+/                                                                                                   
+                                                                                                    
+&funkpars                                                                                           
+n_bilayers=2                                                                                        
+ndim=4                                                                                              
+mat1odd= 'Pt.dat'                                                                                   
+mat2even = 'a-C.dat'                                                                                
+MatEst1st= 'a-C.dat'                                                                                
+MatEst2nd= 'Pt.dat'                                                                                 
+esterno1st=100d0                                                                                    
+esterno2nd=50d0                                                                                     
+matsub= 'sub.dat'                                                                                   
+oddrough=4.0                                                                                        
+evenrough=4.0                                                                                       
+subrough=4.0                                                                                        
+par(1)=1000                                                                                         
+par(2)=-0.9	                                                                                        
+par(3)=0                                                                                            
+par(4)=1                                                                                            
+/                                                                                                   
+                                                                                                    
+                                                                                                    
+1 1 0 1 1 partenza                                                                                  
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    

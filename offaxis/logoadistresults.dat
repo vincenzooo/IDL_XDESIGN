@@ -1,0 +1,12 @@
+results file: testOaDistResults.dat
+execution ended on Sat Jun 26 15:26:43 2010
+raytracing results folder: E:\work\workOA\traie7\angularOpt\shHS_3arcmin_20000pt
+off-axis angles (arcmin):   0.000   1.000   2.000   3.000   4.000   5.000   6.000   7.000
+shell slope:    0.00184400
+shell collecting area:       2.56471
+bins settings: 
+angular step(tStep):  7.27220e-005
+--------------
+time elapsed:        10.196000 s
+number of evaluation:          225
+evaluations per angle:       1      8     16     24     32     40     48     56

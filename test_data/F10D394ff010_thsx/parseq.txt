@@ -1,0 +1,2 @@
+ parametri delle shell fissi (directory di origine non usata)
+ useStartDirFlag = .false.

@@ -1,0 +1,2 @@
+         Nshell   Dmax(mm)   Dmid(mm)   Dmin(mm)   thickness(mm)   Angle(rad)   Area(cm^2)  Mass(kg)
+   1     490.344899     487.079120     477.249929       2.000000        .012167      25.070308       1.886254

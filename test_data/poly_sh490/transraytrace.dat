@@ -1,0 +1,22 @@
+  wall thickness [mm]
+        2.000000000000000
+  max diameters of the entrance pupil [mm]
+      490.344898777253700
+  min diameters of the exit pupil [mm] for next inner shell
+      464.931509045640800
+  min diameters of the intermediate pupil [mm] for next inner shell
+      474.502355263415200
+  radius at the intermediate pupil [mm]
+      243.539559940625000
+  radius at the intermediate pupil bis [mm]
+      243.539559940625000
+  theta angle first cone in rads
+  -1.216736188109724E-002
+  theta angle second cone in rads
+  -3.650208564329172E-002
+  Valori di a2,a3,a4,a5
+   2.005000000000000E-004   3.318000000000000E-004   2.711000000000000E-004
+   9.652000000000000E-005
+  Valori di b2,b3,b4,b5
+   1.000000000000000E-003   4.591000000000000E-004  -4.248000000000000E-004
+   1.651000000000000E-004

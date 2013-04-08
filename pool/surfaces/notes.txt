@@ -1,0 +1,4 @@
+2011-11-15
+From previous version 5dev and 5stable.
+They were integrated in this version, the only file with relevant differences is cmmsurface
+(transition to the Rpoints/Tpoints/Vpoints mechanism.

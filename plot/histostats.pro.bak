@@ -1,0 +1,135 @@
+;+
+;
+;TODO:
+;Verify the setting of nbins and binsize.
+
+; :Description:
+;    Plot histograms and stats. Return a vector with the calculated values for selected
+;    statistical functions.
+;
+; :Params:
+;    data
+;
+; :Keywords:
+;    min
+;    max
+;    binsize
+;    normalize
+;    locations
+;    hist
+;    position
+;    nan
+;    outVars: it is a vector of indexes for the variables to include in output.
+;    /HEADER: if this flag is set, just return an array of strings with the stats descriptions
+;    (useful to create table headers).
+;    statString
+;    yscale
+;    _extra
+;    legend
+;    NOPLOT: only return stats, without plotting.
+;    bTitle
+;    COLOR: can be scalar or array (in that case one color per line).
+;
+; :Author: cotroneo
+; 2011/01/13 
+; *replaced: 
+;   IF (KEYWORD_SET(NBINS) AND KEYWORD_SET(BINSIZE)) THEN BEGIN
+; with:
+;   IF ((N_ELEMENTS(NBINS) NE 0) AND (N_ELEMENTS(BINSIZE) NE 0)) THEN BEGIN
+; *added visulization of help if launched without data.
+; *added BINSIZE in histogram arguments
+;-
+function histoStats,data,min=min,max=max,binsize=binsize,nbins=nbins,normalize=normalize,$
+         locations=locations,hist=hist,position=position,$
+         nan=nan,outVars=outVars,statString=statString,yscale=yscale,_extra=e,$
+         legend=legend,noplot=noplot,boxTitle=bTitle,color=color,header=header
+         
+if keyword_Set(header) or (n_elements(data) eq 0) then begin
+  headerstring=['Mean','PV','Min','Max','Rms',$
+              'R!$_a$!','Stndrd dev of mean','Variance','Skewness','Residual kurtosis'] ;complete list of names for the fields              
+  if n_elements(outvars) ne 0 then headerstring=headerstring[outvars]
+  
+  if n_elements(data) eq 0 then begin
+    PRINT,"function HISTOSTATS"
+    print,"Plot histograms and stats. Return a vector with the calculated values for selected"
+    print,"statistical functions."
+    print,"USAGE:"
+    print,"result=histoStats(data,min=min,max=max,binsize=binsize,nbins=nbins,normalize=normalize,$"
+    print,"locations=locations,hist=hist,stats=stats,position=position,$"
+    print,"nan=nan,outVars=outVars,statString=statString,yscale=yscale,_extra=e,$"
+    print,"legend=legend,noplot=noplot,boxTitle=bTitle,color=color,header=header"
+    print
+    print,"outVars: it is a vector of indexes for the variables to include in output."
+    print,"possible variables:"
+    print,strtrim(sindgen(n_elements(headerstring)),2)+" "+headerstring+newline()
+    print,"/HEADER: if this flag is set, just return an array of strings with the stats descriptions."
+    print
+    print
+  endif
+  return, headerstring
+endif
+
+if n_elements(yscale) eq 0 then yscale=1.1
+if n_elements(min) eq 0 then min=min(data)
+if n_elements(max) eq 0 then max=max(data)
+if n_elements(position) eq 0 then position=10
+if n_elements(color) eq 0 then color=!P.color
+
+if keyword_set(noplot) and keyword_set(legend) then message,$
+    "histostat function: Only one can be set between noplot and legend:"+newline+$
+    "legend: plot the legend only over an existing graph"+newlinw+$
+    "noplot: do not plot anything, just return the string and the results from analysis"
+
+;only one between binsize and nbins can be set. If this was the case
+;histogram is called with the corresponding parameter.
+;if both are set binsize is changed according to nbins.
+;if none of them is set histogram is called with undefined values.
+;however what happens is not always clear.
+if ((n_elements(nbins) ne 0) and (n_elements(binsize) ne 0)) then begin
+    result=dialog_message('Both nbins (='+string(nbins)+') and binsize (='+string(binsize)+$
+    ') have been set. Binsize will be ignored.', TITLE='Histostats Warning' ) 
+    BINSIZE=(MAX-MIN)/NBINS
+endif
+
+hist=float(histogram(data,min=min,max=max,nbin=nbins,binsize=binsize,locations=locations))
+if keyword_set(normalize) then hist=hist/total(hist)
+if (~keyword_set(noplot) and ~keyword_set(legend)) then $
+    plot,locations,hist,yrange=[0,max(hist)*yscale],_strict_extra=e,psym=10,color=color[0]
+result=moment(data,mdev=avgdev,sdev=stddev,nan=nan)
+npoints=n_elements(data)
+       
+stats=[result[0],$                ;0:avg
+       max(data)-min(data),$      ;1:PV
+       min(data),$                ;2:min
+       max(data),$                ;3:max
+       stddev,$                   ;4:standard deviation (rms)
+       avgdev,$                   ;5:mean of absolute deviation (Ra)
+       stddev/sqrt(npoints-1.),$  ;6:standard deviation of the mean
+       result[1],$                ;7:variance
+       result[2],$                ;8:skewness
+       result[3]]                 ;9:kurtosis (residual with respect to 3 (gaussian))
+       
+statString=['mean='+strtrim(string(stats[0]),2),$
+       'PV='+strtrim(string(stats[1]),2),$
+       'min='+strtrim(string(stats[2]),2),$
+       'max='+strtrim(string(stats[3]),2),$
+       'std. dev. (rms)='+strtrim(string(stats[4]),2),$
+       'mean abs. dev. (Ra)='+strtrim(string(stats[5]),2),$
+       'mean. std. dev.='+strtrim(string(stats[6]),2),$
+       'variance='+strtrim(string(stats[7]),2),$
+       'skewness='+strtrim(string(stats[8]),2),$
+       'kurtosis='+strtrim(string(stats[9]),2)]
+
+if n_elements(outVars) ne 0 then begin
+  ;good=where(outVars ne 0)
+  stats=stats[outvars]
+  statString=statString[outvars]
+endif
+
+if n_elements(bTitle) eq 0 then statBox=statString else statBox=[bTitle,statString]
+if ~keyword_set(noplot) then $
+    PLOT_TEXT,statbox,POSITION=position,color=intarr(n_elements(statbox))+color
+return,stats
+
+end
+ 

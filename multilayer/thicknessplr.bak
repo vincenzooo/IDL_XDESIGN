@@ -1,0 +1,8 @@
+function thicknessPLR, alfa, beta, c, Nbil
+	;return the sequence of thicknesses calculated
+	;by using the rescaled power-law
+
+	x=findgen(Nbil)/(Nbil-1)
+	dspacing=alfa/(beta+x)^c
+	return, dspacing
+end
