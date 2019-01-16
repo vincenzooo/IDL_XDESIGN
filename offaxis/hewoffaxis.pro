@@ -5,7 +5,7 @@ pro hewOffAxis,folder,distance=distance,plot=plot,window=windownumber,log=logU,$
   ;with off-axis angle, hew and barycenter positions. If a log file is provided
   ;
   ;-----------------------------------
-  ;vinput ariables
+  ;input variables
   ;folder: folder with data
   ;options:
   ;distance: distance between focal plane and intersection plane in mm,
