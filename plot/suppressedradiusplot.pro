@@ -1,6 +1,7 @@
 pro suppressedRadiusPlot,xx,yy,rsuppressed,polar=polar,center=center,$
     expansion=expansion,_extra=e,rout=r,psiout=psi,nosquare,oplot=oplot
-    
+;+
+;-    
     if n_elements(center) eq 0 then center= [0.,0.]
     if keyword_set(polar) then begin
       ;convert from polar (r,psi) to cartesian
@@ -19,8 +20,14 @@ pro suppressedRadiusPlot,xx,yy,rsuppressed,polar=polar,center=center,$
     if c ne 0 then begin
        print,'suppressedRadiusPlot.pro WARNING:'+newline()+$
         'There are ',c,' values with radius smaller then the suppressed radius,'+$
-        newline()+' they will not be plotted'
-        if cpos eq 0 then goto, out else r=r[rpos]
+        newline()+' they will not be plotted.'
+        if cpos eq 0 then begin 
+        
+        print,'suppressedRadiusPlot.pro WARNING:'+newline()+$
+        'No values with radius larger than the suppressed value,'+$
+        newline()+' nothing will be plotted.'
+        return
+        endif else r=r[rpos]
     endif 
     
     if keyword_set(nosquare) eq 0 then begin
@@ -31,5 +38,6 @@ pro suppressedRadiusPlot,xx,yy,rsuppressed,polar=polar,center=center,$
     endif 
     if keyword_set(oplot) then oplot,r,psi,/polar,_strict_extra=e $
     else plot,r,psi,xrange=xrange,yrange=yrange,isotropic=isotropic,/polar,_strict_extra=e
-    out:
+    
+    
 end
