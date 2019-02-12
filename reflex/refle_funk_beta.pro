@@ -1,4 +1,84 @@
-function Rifle, th, lam, materials,z,sigma,c_thick,c_mat
+;+
+; NAME:
+; 
+;
+; PURPOSE:
+; Wrapper for IMD fresnel function. Launch with material names instead of
+; refracion indices. Not very efficient as it has to read index files every
+; time.
+;
+; CATEGORY:
+; Reflex
+;
+; CALLING SEQUENCE:
+; Reflex = Rifle(th, lam, materials,z,sigma)
+;
+;
+; INPUTS:
+; th: array with thickness in Angstrom.
+; lam: 
+; materials: array of strings with material names.
+; z:
+; sigma:
+;
+; OPTIONAL INPUTS:
+; c_thick
+; c_mat
+;
+; OUTPUTS:
+;restituisce la riflettivita', passando la lista dei nomi dei materiali (stringhe),
+;lista degli spessori, lista delle rugosita', spessore dell'eventuale overcoating.
+;la matrice di angoli (x) ed energie (y) e' contenuta nel blocco common.
+;R[n,*] e' la riflettivita' in funzione dell'energia
+;;usa le funzioni di imd, quindi le carica all'inizio se non gia' fatto
+;(o almeno ci prova: non funziona, bisogna lanciare imd a mano)
+;
+;
+; COMMON BLOCKS:
+; BLOCK1: Describe any common blocks here. If there are no COMMON
+;   blocks, just delete this entry.
+;
+; SIDE EFFECTS:
+; Describe "side effects" here.  There aren't any?  Well, just delete
+; this entry.
+;
+; RESTRICTIONS:
+; Describe any "restrictions" here.  Delete this section if there are
+; no important restrictions.
+;
+; PROCEDURE:
+; You can describe the foobar superfloatation method being used here.
+; You might not need this section for your routine.
+;
+; EXAMPLE:
+; Please provide a simple example here. An example from the
+; DIALOG_PICKFILE documentation is shown below. Please try to
+; include examples that do not rely on variables or data files
+; that are not defined in the example code. Your example should
+; execute properly if typed in at the IDL command line with no
+; other preparation.
+;
+;       Create a DIALOG_PICKFILE dialog that lets users select only
+;       files with the extension `pro'. Use the `Select File to Read'
+;       title and store the name of the selected file in the variable
+;       file. Enter:
+;
+;       file = DIALOG_PICKFILE(/READ, FILTER = '*.pro')
+;
+; MODIFICATION HISTORY:
+;   Written by: Vincenzo Cotroneo, Date.
+;   Harvard-Smithsonian Center for Astrophysics
+;   60, Garden street, Cambridge, MA, USA, 02138
+;   vcotroneo@cfa.harvard.edu
+;
+;   Written by: Vincenzo Cotroneo, Date.
+;   INAF/Brera Astronomical Observatory
+;   via Bianchi 46, Merate (LC), 23807 Italy
+;   vincenzo.cotroneo@brera.inaf.it
+;
+;-
+
+
 ;wrapper per la funzione fresnel di imd, si lancia con i nomi dei materiali
 ;invece che gli indici di rifrazione.
 ;e' vero che e' un po' una minchiata, in quanto cosi' li rilegge ogni volta da file...
@@ -10,6 +90,9 @@ function Rifle, th, lam, materials,z,sigma,c_thick,c_mat
 ;;usa le funzioni di imd, quindi le carica all'inizio se non gia' fatto
 ;(o almeno ci prova: non funziona, bisogna lanciare imd a mano)
 
+
+
+function Rifle, th, lam, materials,z,sigma,c_thick,c_mat
 
 	;------------------------------------
 	if n_elements(c_thick) eq 0 then c_thick=0
