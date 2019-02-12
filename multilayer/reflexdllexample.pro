@@ -1,5 +1,6 @@
 pro reflexDLLexample
 
+  dllFile='f_dll.so'
 	;lancia le routine dll
 	ener=vector(1,80.,1000)
 	nbil=200
@@ -17,8 +18,8 @@ pro reflexDLLexample
 	mat2=folder+path_sep()+'af_files\a-C.dat'
 	mat3=folder+path_sep()+'af_files\Pt.dat'
 
-	loadRI,ener,mat1,mat2,mat3
-	ref= reflexDLL (ener, angle, dSpacing, rough,/unload)
+	loadRI,ener,mat1,mat2,mat3,dllFile
+	ref= reflexDLL (ener, angle, dSpacing, rough, dll=dllFile ,/unload)
 	plot, ener,ref
 
 	writecol,'exampleRef.txt',ener,ref
