@@ -1,0 +1,10 @@
+  Error opening material file1 "E:\work\work2\traie6\angle_distr\sx2_sh37\af_fil
+ es\Pt.dat" io=        6416
+  Error opening material file1 "E:\work\work2\traie6\angle_distr\sx2_sh37\af_fil
+ es\Pt.dat" io=        6416
+  Error opening material file1 "E:\work\work2\traie6\angle_distr\sx2_sh37\af_fil
+ es\Pt.dat" io=        6416
+  Error opening material file1 "E:\work\work2\traie6\angle_distr\sx2_sh37\af_fil
+ es\Pt.dat" io=        6416
+  Error opening material file1 "E:\work\work2\traie6\angle_distr\sx2_sh37\af_fil
+ es\Pt.dat" io=        6416

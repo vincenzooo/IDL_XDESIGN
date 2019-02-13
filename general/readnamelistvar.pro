@@ -1,8 +1,8 @@
 function  readNamelistVar,file,varname,silent=silent,separator=sep,$
           stringdelimiter=sd
 ;read a namelist variable from file if found it.
-;if not found and silent is set return a string with an error message,
-;if silent is not set raise an error.
+;if not found and silent is set, return a string with an error message,
+;if silent is not set, raise an error.
 
 if n_elements(sd) eq 0 then stringdelimiter="'"+'"' else stringdelimiter=sd
 if n_elements(sep) eq 0 then sep="="
@@ -23,7 +23,7 @@ while ~ EOF(nf) do begin
 	endif
 endwhile
 
-;arriva qui solo se qualcosa e' andato storto.
+;it gets here only if something went wrong.
 free_lun,nf
 if n_elements(silent) eq 0 then silent=0
 mes="variable <"+varname+"> not found in file: "+file

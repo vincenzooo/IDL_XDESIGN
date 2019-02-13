@@ -10,6 +10,9 @@
 ;   The code is written in the procedure with all parameter explicit for easier use. The function 
 ;     just creates a copy and call the procedure on it, then return it. Function parameters are specified by
 ;     extra (take attention to use ref_extra when proper).
+;
+; 
+
 
 function xydata::selectRoi,data2,noplot=noplot,oplot=oplot,message=message
   ;interactively select a ROI. If NOPLOT is set, do not plot and uses the current window

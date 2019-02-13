@@ -1,7 +1,7 @@
 function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
           nrows=nrows,ncols=n_col,delimiter=delimiter,numline=nl,$
           header=header,type=type,stripblank=strip ;,comment=comment
-;da giorgia
+
 ; the number of columns is determined by last line read.
 ;return a matrix of string [ncols,nrows]. NROWS and NCOLS are output parameters.
 
@@ -41,6 +41,8 @@ function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
 ; if it is white the reading is wrong. The bug could be always existing or introduced
 ; in last week.
 ; Added STRIPBLANK flag
+; author: Giorgia Sironi
+; edited by Vincenzo Cotroneo
 
 if n_elements(skip) eq 0 then skip=0
 ;read file, determine number of columns from the last line
