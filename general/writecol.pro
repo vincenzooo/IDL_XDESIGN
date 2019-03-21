@@ -37,13 +37,15 @@
 ; PROCEDURES CALLED:
 ;
 ; REVISION HISTORY:
-;   17-June-2001 Written by JXP
-;-
-;   21-December-2011 kov:
+; 
+; ;   21-December-2011 VC:
 ;     L'originale e' stato rinominato in 
 ; E:\Dati_applicazioni\idl\usr_contrib\Readcol\writecol_original.pro
 ; 14/10/2010 it is now possible to use it with only one vector.
 ; ??/??/20?? added header
+;   17-June-2001 Written by JXP
+;-
+
 ;------------------------------------------------------------------------------
 pro writecol, file, v1, v2, v3, v4, v5, v6, v7, v8, v9, $
               v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, $

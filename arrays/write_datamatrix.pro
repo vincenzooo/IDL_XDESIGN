@@ -1,15 +1,19 @@
 pro write_datamatrix,file,d,header=header,x=x,y=y,padding=padding,$
-    separator=separator
+    separator=separator,strict=st
 ;write a matrix on file. If FILE is an integer, 
 ; assume that a file is already open use FILE as the unit number.
-; If header is provided print it at the beginning. 
-; If x and/or y is provided, use them for first row and column. 
+; If HEADER is provided print it at the beginning. 
+; If X and/or Y is provided, use them for first row and column. 
 ; If both of them are provided the string PADDING (default='0.0' 
 ; is used to fill the first row-first column element).
-
+; if STRICT is set, gives error for empty array, otherwise write empty file 
+; possibly with header. 
+; 2019/03/13 added option STRICT.
+;-
 if size(file,/type) ge 1 and size(file,/type) le 5 then filenum=file 
 
-if n_elements(d) eq 0 then message,'you must provide data to write'
+if keyword_set(st) and n_elements(d) eq 0 then $
+  message,'you must provide data to write'
 data=d
 
 size=size(data)
@@ -43,7 +47,9 @@ if n_elements(header) ne 0 then begin
    for i =1, n_elements(header)-1 do begin
     printf,nfile,header[i]
    endfor
+   
 endif
+if n_elements(data) eq 0 then return
 
 if n_elements(X) ne 0 then begin
   if n_elements(X) ne ncol then message,'non matching number of columns,'+$
