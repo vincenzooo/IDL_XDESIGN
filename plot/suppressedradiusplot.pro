@@ -13,7 +13,7 @@ pro suppressedRadiusPlot,xx,yy,rsuppressed,polar=polar,center=center,$
     endelse
     
     ;convert to polar coordinates
-    psi=atan((y-center[0]),(x-center[1])) ;atan((y),(x-realxc))
+    psi=atan((y-center[1]),(x-center[0])) ;atan((y),(x-realxc))
     r=sqrt((x-center[0])^2+(y-center[1])^2)-rsuppressed ;sqrt((x-realxc)^2+(y)^2)
     
     rnegative=where(r lt 0,c,complement=rpos,ncomplement=cpos) 
