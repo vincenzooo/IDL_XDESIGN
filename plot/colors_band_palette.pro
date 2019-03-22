@@ -191,7 +191,10 @@ if n_elements(ec) ne 0 then begin
   palette[ecWork[*,0],*]=ecWork[*,1:3]
 endif
 
-if keyword_set(load) then tvlct, palette
+if keyword_set(load) then begin
+  tvlct, palette
+  device,decomposed=0
+endif
 return,palette
 
 end

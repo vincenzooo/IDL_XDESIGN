@@ -25,7 +25,7 @@ nvecx=nvectors(x_m)
 npx=n_elements(x_m)/nvecx
 
 if nvecx eq 1 then begin
-  if n_elements(x_m) ne n_elements(y_m)/nvectors then message,'Vector provided as x has '+npx+' points.'+newline()+$
+  if n_elements(x_m) ne n_elements(y_m)/nvectors then message,'Vector provided as x has '+string(npx)+' points.'+newline()+$
     'Array provided as y has '+string(n_elements(y_m)/nvectors)+' points and '+string(nvectors)+' vectors.'+newline()+$
     "They don't match!"
   x_m=rebin(x_m,npx,nvectors)

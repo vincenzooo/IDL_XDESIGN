@@ -21,7 +21,7 @@ end
 pro colors_band3d, vmin, vmax, pmin, pmax, colors, zero=zero, bandsize=bandsize, $
 	bandvalsize=bandvalsize,extracolors=ec,tek=tek,noreverse=noreverse,force=force
 
-  if n_elements(force) ne 0 then begin
+  if ~keyword_set(force) ne 0 then begin
       errmsg="The Colors_band3d routine is obsolete. Use function"+$
       "color_band_palette with /load option. e.g.: "+$
       "result=colors_band_palette(vmin,vmax,Colors,pmin=pmin,pmax=pmax,/load"+$
