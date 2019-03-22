@@ -25,6 +25,7 @@
 ; RSUPPRESSED: If provided, this value is subtracted from the radius before plotting,
 ;   useful for polar plots of residuals from a given circle. radius can be suppressed
 ;   only if center is in origin (empty or set to [0,0]), otherwise it would not make sense. 
+
 ;   
 ; NP: number of points to be used for the plot, default to 100.
 ; 
