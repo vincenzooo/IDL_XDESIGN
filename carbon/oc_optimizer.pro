@@ -1,4 +1,4 @@
-;VC 2019/02/22 misnamed procedure PLOTGAIN, it was probably later renamed and evolved to plotgain. 
+;VC 2019/02/22 misnamed procedure PLOTGAIN, it was probably later renamed and evolved to plotgain.pro. 
 
 pro plotgain,filename,mat,c_mat,perc_gain=perc_gain,area_gain=area_gain,$
 	density=density,optimize=optimize,t_range=t_range,E_range=E_range

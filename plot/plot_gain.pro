@@ -1,30 +1,3 @@
-
-
-pro plot_rect,telescopes ,window_num, _extra=e
-
-	if !D.NAME eq 'WIN' then begin
-	curwin=	!D.WINDOW
-	if n_elements(window_num) ne 0 then wset, window_num
-	endif
-	for i=0, n_elements(telescopes)-1 do begin
-		xtel=telescopes[i]
-		x0=xtel.angles[0]
-		y0=xtel.energy[0]
-		xlength=xtel.angles[1]-x0
-		ylength=xtel.energy[1]-y0
-		col=xtel.color
-		if n_elements (xtel.linestyle) ne 0 then ls=xtel.linestyle
-		RECTANGLE,X0,Y0,XLENGTH,YLENGTH,color=col,thick=3,linestyle=ls
-		;plot labels
-		xl=xtel.labeloffset[0]
-		yl=xtel.labeloffset[1]
-
-		;if y0+ylength gt !Y.RANGE[1] then yl=y0
-		xyouts,xl,yl,xtel.name,color=col,charthick=2,orientation=90
-	endfor
-	if !D.NAME eq 'WIN' then wset, curwin
-end
-
 pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
   ntracks=ntracks,perc_gain=pgain,area_gain=area_gain,telescopes=telescopes,$
   window=ww,extracolors=ec
@@ -68,7 +41,7 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
 ;plot color map of percentual gain on window ww (or file filenameww)
   if n_elements (ww) eq 0 then ww=4
   if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww,xsize=600,ysize=400 else $
-    print,'cane' ;device,filename=filename+string(ww)+'.'+!D.name
+    device,filename=filename+string(ww)+'.'+!D.name
   colors_band3d, min(pgain), max(pgain), 32, 254,bandvalsize=100, colors,extracolors=ec,/TEK
   cont_image,pgain,(90-th),en,/colorbar,$
     title='R^2 percentual gain for '+filename,bar_title='% gain [(R_coat^2-R_bare^2)/(R_bare^2)]',$
@@ -125,7 +98,32 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
 
 end
 
+pro plot_rect,telescopes ,window_num, _extra=e
 
+  if !D.NAME eq 'WIN' then begin
+    curwin= !D.WINDOW
+    if n_elements(window_num) ne 0 then wset, window_num
+  endif
+  for i=0, n_elements(telescopes)-1 do begin
+    xtel=telescopes[i]
+    x0=xtel.angles[0]
+    y0=xtel.energy[0]
+    xlength=xtel.angles[1]-x0
+    ylength=xtel.energy[1]-y0
+    col=xtel.color
+    if n_elements (xtel.linestyle) ne 0 then ls=xtel.linestyle
+    RECTANGLE,X0,Y0,XLENGTH,YLENGTH,color=col,thick=3,linestyle=ls
+    ;plot labels
+    xl=xtel.labeloffset[0]
+    yl=xtel.labeloffset[1]
+		;xl=x0+xtel.labeloffset[0]
+		;yl=y0+xtel.labeloffset[1]
+
+    ;if y0+ylength gt !Y.RANGE[1] then yl=y0
+    xyouts,xl,yl,xtel.name,color=col,charthick=2,orientation=90
+  endfor
+  if !D.NAME eq 'WIN' then wset, curwin
+end
 
 ;densita'  --
 ;C:1.9/2.3(graph)
@@ -143,17 +141,17 @@ Ir={sample,material:'Ir',density:22.4,filename:'IrC',octhickness:105.}
 Au={sample,material:'Au',density:19.3,filename:'AuC',octhickness:80.}
 samples=[Pt,W,Ir,Au]
 eRosita={name:"eRosita", angles:[0.34,1.6], energy:[0.5,10.], color:0,labeloffset:[1.57,6.5],$
-	linestyle:2}
+	linestyle:2}  ;labeloffset:[0.07,0.3]
 hxmt={name:"PolariX/HXMT", angles:[0.61,0.88], energy:[2.,8.],color:4,labeloffset:[0.95,6.2],$
-	linestyle:0}
+	linestyle:0}  ;labeloffset:[0.07,2.80]
 simbolx={name:"Simbol X", angles:[0.1,0.23], energy:[0.5,80.],color:0,labeloffset:[0.15,5.],$
-	linestyle:1}
+	linestyle:1}  ;labeloffset:[0.07,2.5]
 edge={name:"EDGE/XENIA", angles:[0.8,1.8], energy:[0.5,6.],color:0,labeloffset:[1.75,3],$
-	linestyle:0}
+	linestyle:0}  ;labeloffset:[0.95,3]
 xeus={name:"XEUS", angles:[0.24,0.85], energy:[0.1,40.], color:10,labeloffset:[0.30,0.5],$
-	linestyle:0}
+	linestyle:0}  ;labeloffset:[0.07,0.5]
 conx={name:"Constellation-X", angles:[0.11,0.46], energy:[0.1,70.], color:11,labeloffset:[0.17,7.0],$
-	linestyle:0}
+	linestyle:0}  ;labeloffset:[0.07,6.0]
 
 telescopes=[hxmt,simbolx,xeus,edge,eRosita,conx]
 
