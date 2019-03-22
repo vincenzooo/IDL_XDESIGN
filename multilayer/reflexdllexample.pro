@@ -9,7 +9,8 @@ pro reflexDLLexample
 	c=0.27
 	gamma=0.35
 	dspacing=thicknessPL(a,b,c,nbil,gamma)
-	folder=file_dirname(file_which('reflexdllexample.pro'))
+	folder=ProgramRootDir()
+	;file_dirname(file_which('reflexdllexample.pro',/INCLUDE_CURRENT_DIR))
 	
 	;dspacing=reverse(dspacing)
 	angle=3.5e-3

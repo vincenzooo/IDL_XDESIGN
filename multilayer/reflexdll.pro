@@ -1,5 +1,5 @@
 
-function reflexDLL, ener, angle, dSpacing, rough, dllFile,unload=unload
+function reflexDLL, ener, angle, dSpacing, rough, dllFile, symbolname=symbolname,unload=unload
 ;+
 ; NAME:
 ; ReflexDLL
@@ -48,6 +48,15 @@ function reflexDLL, ener, angle, dSpacing, rough, dllFile,unload=unload
 ;   via Bianchi 46, Merate (LC), 23807 Italy 
 ;   vincenzo.cotroneo@brera.inaf.it
 
+  if n_elements(dllFile) eq 0 then begin
+    ;folder=programrootdir()  ;this sets dll in same folder as this loadRI.
+    ;dllFile=folder+'f_dll.dll'
+    dllFile='f_dll.dll' ;use current folder
+    print,"loadri: default dll at: ",dllFile
+  endif
+
+  if n_elements(symbolname) eq 0 then symbolname='readindex'
+  
 	nener=n_elements(ener)
 	reflex=fltarr(nener)
 	nl=n_elements(dSpacing)
@@ -59,7 +68,7 @@ function reflexDLL, ener, angle, dSpacing, rough, dllFile,unload=unload
 	  dllFile=folder+path_sep()+'f_dll.dll'
   endif
 	;r=call_external(dllFile,'readindex',ener,nener,/cdecl)
-	r=call_external(dllFile,'reflex',$
+	r=call_external(dllFile,symbolname,$
 		dd,nbil,reflex,nener,angle,rough,/cdecl,unload=unload)
 	return,reflex
 

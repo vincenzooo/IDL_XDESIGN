@@ -67,8 +67,8 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
 ;-------------------------------------------
 ;plot color map of percentual gain on window ww (or file filenameww)
   if n_elements (ww) eq 0 then ww=4
-  if !D.Name eq 'WIN' then window,ww,xsize=600,ysize=400 else $
-    device,filename=filename+string(ww)+'.'+!D.name
+  if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww,xsize=600,ysize=400 else $
+    print,'cane' ;device,filename=filename+string(ww)+'.'+!D.name
   colors_band3d, min(pgain), max(pgain), 32, 254,bandvalsize=100, colors,extracolors=ec,/TEK
   cont_image,pgain,(90-th),en,/colorbar,$
     title='R^2 percentual gain for '+filename,bar_title='% gain [(R_coat^2-R_bare^2)/(R_bare^2)]',$
@@ -82,7 +82,7 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
 
 ;-------------------------------------------
 ;plot color map of area gain on window ww+1 (or file filenameww)
-  if !D.Name eq 'WIN' then window,ww+1,xsize=600,ysize=400 else $
+  if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww+1,xsize=600,ysize=400 else $
     device,filename=filename+string(ww+1)+'_a.'+!D.name
 ;   colors1=[[[50,0,0],[255,0,0]],$
 ;   [[0,50,0],[0,255,0]],$

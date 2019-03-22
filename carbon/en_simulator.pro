@@ -84,3 +84,11 @@ pro en_simulator,samples, theta, en_range
 	close,2
 	close,3
 end
+
+
+; launch energy scan simulator
+en_range =[0.1,10.]
+angles=[0.1,0.15, 0.2, 0.3,0.4, 0.5,0.6, 0.7,0.8,0.9, 1.0,1.1, 1.2]
+en_simulator,samples, angles, en_range
+
+end

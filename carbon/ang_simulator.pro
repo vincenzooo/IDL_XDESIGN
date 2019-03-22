@@ -82,3 +82,11 @@ pro ang_simulator,samples, energy, th_range
 	close,2
 	close,3
 end
+
+
+;launch angular scan simulator
+energy=[0.93,1.49,2.98,4.51,5.41,6.40]
+thrange=[0,2.]
+ang_simulator, samples, energy,thrange
+
+end
