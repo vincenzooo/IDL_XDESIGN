@@ -1,5 +1,0 @@
-2013/07/18
-This folder should be set as first in the path.
-This folder contains single routines downloaded from the internet and routines that have been modified to solve conflicts or add features.
-2013/08/14
-Then copy the files directly in the main folder..

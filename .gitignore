@@ -1,0 +1,13 @@
+*.bak
+aeffgen/
+obsolete/
+Spiga2010/
+testTools/
+usr_modified/
+imdpossiblebug.pro
+status.sav
+imp_obstr.txt
+tolower
+template.pro
+
+
