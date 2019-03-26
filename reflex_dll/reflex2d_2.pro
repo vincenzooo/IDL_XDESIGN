@@ -1,9 +1,11 @@
-pro reflex2D,ener,fovArcmin,alphaRad,th,dSpacing,$
+pro reflex2D,ener,fovArcmin,alphaRad,thResArcsec,dSpacing,$
     matsub,matbot,mattop,roughness,tmatrix=tmatrix,$
     mlname=mlname,nocontour=nocontour,outfolder=outfolder,$
     aeffOAangles=aeffoaangles,postscript=postscript,zoomrange=zoomrange,trimfactor=trimfactor
 ;plotta la riflettività di un multilayer in funzione di angoli ed
 ;energie usando la routine contourgain
+;note 2019/03/25 this is apparently second version, used for SPIE2010, with compatible scripts
+;  below. So I rename it today from reflex2d_3 to reflex2d_2.
   
   setstandarddisplay
   rough=roughness
@@ -12,17 +14,17 @@ pro reflex2D,ener,fovArcmin,alphaRad,th,dSpacing,$
   mat3=mattop
   alpha=float(alphaRad)
   nener=n_elements(ener)
-  ;fov=float(fovarcmin*60./206265) ; da primi in radianti 
-  ;thRes=float(thResArcsec/206265) ; da secondi in radianti 
-  ;ntheta=1.+fov/thres ;questo e' il numero di intervalli per gli angoli di impatto
+  fov=float(fovarcmin*60./206265) ; da primi in radianti 
+  thRes=float(thResArcsec/206265) ; da secondi in radianti 
+  ntheta=1.+fov/thres ;questo e' il numero di intervalli per gli angoli di impatto
   ;corrispondera' anche al doppio del numero di intervalli sul campo di vista
-  ;angmin=-fov
-  ;angmax=+fov
-  ntheta=n_elements(th)
+  angmin=-fov
+  angmax=+fov
+
   if n_elements(mlname) eq 0 then titlestring="" else titlestring=" for "+mlname
   if n_elements(outfolder) eq 0 then outfolder=""
   ;th=vector(3.7e-3*180/!PI-8./60,3.7e-3*180/!PI+8./60,ntheta)
-  ;th=vector(angmin,angmax,ntheta)
+  th=vector(angmin,angmax,ntheta)
   OnAxisIndex=fix(findex(th,0.0))
   rmatrix=fltarr(nener,ntheta)
   ;dMatrix=fltarr(ntheta,ntheta)

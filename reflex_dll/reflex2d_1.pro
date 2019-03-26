@@ -1,5 +1,7 @@
 pro reflex2D2,ener,fovArcmin,alphaRad,thResArcsec,dSpacing,$
     matsub,matbot,mattop,roughness,dmatrix=dmatrix,tmatrix=tmatrix
+; note 2019/03/25 first version, use directly reflexDLL (as opposite to using 
+;  reflexMatrix). So I rename it today from reflex2d2 to reflex2d_1.
 ;plotta la riflettività di un multilayer in funzione di angoli ed
 ;energie usando la routine contourgain
 
@@ -17,8 +19,11 @@ pro reflex2D2,ener,fovArcmin,alphaRad,thResArcsec,dSpacing,$
   angmin=-fov
   angmax=+fov
   
+
+
   ;th=vector(3.7e-3*180/!PI-8./60,3.7e-3*180/!PI+8./60,ntheta)
   th=vector(angmin,angmax,ntheta)
+
   rmatrix=fltarr(nener,ntheta)
   ;dMatrix=fltarr(ntheta,ntheta)
   dMatrixPlot=fltarr(ntheta,ntheta)
