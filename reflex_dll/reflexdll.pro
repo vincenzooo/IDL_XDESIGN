@@ -1,4 +1,4 @@
-
+;2019/03/25 moved from multilayer (probably used for off axis analytical effective area)
 function reflexDLL, ener, angle, dSpacing, rough, dllFile, symbolname=symbolname,unload=unload
 ;+
 ; NAME:

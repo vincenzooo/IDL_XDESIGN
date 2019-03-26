@@ -72,7 +72,7 @@ pro ang_simulator,samples, energy, th_range
 			printf,2,'set terminal postscript color linewidth 2'
 			printf,2,"set out '",fn,"ps'"
 			printf,2,'replot'
-			printf,2,'set term win'
+			printf,2,'set term '+ (!VERSION.OS_FAMILY eq 'Windows'? 'win': 'X11')
 			printf,2,'set output'
 			printf,2,"#------------------------------"
 			printf,2
@@ -83,6 +83,12 @@ pro ang_simulator,samples, energy, th_range
 	close,3
 end
 
+
+Pt={sample,material:'Pt',density:21.4,filename:'PtC',octhickness:80.}
+W={sample,material:'W',density:19.3,filename:'WC',octhickness:80.}
+Ir={sample,material:'Ir',density:22.4,filename:'IrC',octhickness:105.}
+Au={sample,material:'Au',density:19.3,filename:'AuC',octhickness:80.}
+samples=[Pt,W,Ir,Au]
 
 ;launch angular scan simulator
 energy=[0.93,1.49,2.98,4.51,5.41,6.40]

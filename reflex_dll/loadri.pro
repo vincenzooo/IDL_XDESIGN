@@ -1,6 +1,7 @@
+;2019/03/25 moved from multilayer (probably used for off axis analytical effective area)
 pro loadRI, ener, substrate,bottom,top, dllFile, symbolname, unload=unload
 	;+
-	load the multilayer refraction index for a mulatilayer
+	;load the multilayer refraction index for a mulatilayer
 	;don't set unload to keep in memory.
 	; substrate,bottom,top -> filenames
 	; Symbolname: (added 2019/02/15, allow to change the name of the function

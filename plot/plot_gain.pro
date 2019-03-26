@@ -138,7 +138,7 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
   cont_image,pgain,(90-th),en,/colorbar,min_value=min_value,max_value=max_value,$
     title='R^2 percentual gain for '+filename,bar_title='% gain [(R_coat^2-R_bare^2)/(R_bare^2)]',$
     xtitle='Incidence angle (deg)', ytitle='Energy (keV)'
-  contour, r_bare^2,90-th,en,/overplot,levels=[0.1,0.5],color=0,c_thick=1.1,c_linestyle=0,$
+  contour, r_bare^2,90-th,en,/overplot,levels=[0.1,0.5],color=251,c_thick=1.1,c_linestyle=0,$
     c_annotation=["R^2=0.1","R^2=0.5"],c_charthick=2
   plot_rect,telescopes, thick=1, color=251
   if n_elements(density) ne 0 then $

@@ -142,7 +142,7 @@ Pt={sample,material:'Pt',density:21.4,filename:'PtC',octhickness:80.}
 W={sample,material:'W',density:19.3,filename:'WC',octhickness:80.}
 Ir={sample,material:'Ir',density:22.4,filename:'IrC',octhickness:105.}
 Au={sample,material:'Au',density:19.3,filename:'AuC',octhickness:80.}
-samples=[Pt,W,Ir,Au]
+;samples=[Pt,W,Ir,Au]
 eRosita={name:"eRosita", angles:[0.34,1.6], energy:[0.5,10.], color:0,labeloffset:[1.57,6.5],$
 	linestyle:2}  ;labeloffset:[0.07,0.3]
 hxmt={name:"PolariX/HXMT", angles:[0.61,0.88], energy:[2.,8.],color:4,labeloffset:[0.95,6.2],$
@@ -199,7 +199,7 @@ device , FILE='reflex2_0.7deg.ps'
 i_th07=max(where(90.-theta lt 0.7))
 pgain=100*(R_coated^2-R_bare^2)/R_bare^2
 plot, ener,R_coated[i_th07,*]^2,xtitle='Energy (keV)',ytitle='Square reflectivity',$
-;	title='Square reflectivity vs energy at 0.7 deg'
+	title='Square reflectivity vs energy at 0.7 deg'
 oplot, ener,R_bare[i_th07,*]^2,color=100,linestyle=2
 
 legend,["Pt + C(80 A)","Pt"],position=12,color=[!P.color,100],linestyle=[0,2]
@@ -236,8 +236,8 @@ DEVICE, XSIZE=7, YSIZE=5, /INCHES
 device,/close
 ;--------------------------------
 
-
-set_plot, 'win'
+setstandarddisplay
+;set_plot, 'win'
 
 ;-------------------------------
 set_plot, 'PS'
@@ -278,7 +278,8 @@ DEVICE, XSIZE=7, YSIZE=5, /INCHES
 device,/close
 ;--------------------------------
 
-set_plot, 'win'
+setstandarddisplay
+;set_plot, 'win'
 
 ;--------------------------------------
 
