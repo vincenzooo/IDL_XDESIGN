@@ -6,7 +6,7 @@
 
 ;compute the average surface, calculate statistical indicator
 
-  ; M. Katz 1/26/04
+; From original routine by M. Katz 1/26/04
 ; IDL function to perform a least-squares fit a plane, based on
 ; Ax + By + C = z
 ;

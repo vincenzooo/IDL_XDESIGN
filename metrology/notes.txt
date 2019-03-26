@@ -1,0 +1,14 @@
+2019/03/25 this was the old glorious POOL folder. Renamed to metrology.
+
+Original content:
+-rw-r--r-- 1 cotroneo cotroneo 1013 Apr  8  2013 cmdlog__define.pro
+drwxr-xr-x 3 cotroneo cotroneo 4096 Apr  8  2013 dektat
+-rw-r--r-- 1 cotroneo cotroneo 1367 Apr  8  2013 matchprofiles.pro
+-rw-r--r-- 1 cotroneo cotroneo   72 Mar 26 00:09 notes.txt
+drwxr-xr-x 3 cotroneo cotroneo 4096 Jan 19 02:09 profiles
+-rw-r--r-- 1 cotroneo cotroneo 1329 Apr  8  2013 removeline.pro
+drwxr-xr-x 5 cotroneo cotroneo 4096 Apr  8  2013 surfaces
+drwxr-xr-x 3 cotroneo cotroneo 4096 Apr  8  2013 thermocouples
+drwxr-xr-x 3 cotroneo cotroneo 4096 Apr  8  2013 timeTracks
+
+Spiga2010 was moved out.

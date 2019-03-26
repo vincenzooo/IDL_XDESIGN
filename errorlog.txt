@@ -1,3 +1,0 @@
-  Error opening material file1 "E:\Dati_applicazioni\idl\usr_contrib\kov\multila
- yer\E:\Dati_applicazioni\idl\usr_contrib\kov\multilayer\af_files\Pt.dat" io= 
-       6412
