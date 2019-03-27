@@ -61,7 +61,7 @@ if n_elements(Y) ne 0 then begin
   if n_elements(x) ne 0 then yy=[n_elements(padding) eq 0?'0.0':padding,string(y)]
   if n_elements(Y) ne nrow then message,'non matching number of rows,'+$
         newline()+'data: '+string(nrow)+newline()+$
-        'Y:'+string(n_elements(Y))
+        'Y:'+string(n_elements(Y)) else yy = y
   data=[transpose(yy),data]
 endif
 
