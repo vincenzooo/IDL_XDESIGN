@@ -27,7 +27,9 @@ loadct, 39
 if n_elements(index) eq 0 then index=1
 if n_elements(FEarcsec) eq 0 then FEarcsec=0
 if n_elements(nops) eq 0 then nops=0
-readcol,folder+path_sep()+'shellStruct.txt',F='I,X,F,X,X,F', N,Dmid,shang
+;readcol,folder+path_sep()+'shellStruct.txt',F='I,X,F,X,X,F', N,Dmid,shang
+; Nshell   Dmax(mm)   Dmid(mm)   Dmin(mm)   thickness(mm)   Angle(rad)   Area(cm^2)  Mass(kg)
+readcol,folder+path_sep()+'shellstruct.txt',F='I,X,F,X,X,F', N,Dmid,shang
 if n_elements(wplot) eq 0 then wplot=[-1]
 if n_elements(wplot) eq 1 then wplot=[wplot]
 
@@ -43,7 +45,7 @@ if logFlag ne 0 then begin
 endif
 
 th=getOAangle(folder)
-focal=readNamelistVar(folder+path_sep()+'imp_offAxis.txt','F_LENGTHdaImp_m')
+focal=readNamelistVar(folder+path_sep()+'imp_offaxis.txt','F_LENGTHdaImp_m')
 focal=float(focal)*1000.
 
 nangles= n_elements(th)-1
@@ -51,7 +53,7 @@ hewBar=fltarr(nangles)
 hewReal=fltarr(nangles)
 
 ;read photon list and set variables
-readFP, folder+path_sep()+'psf_Data_'+string(index,format='(i2.2)')+'.txt',qtarget=15, $
+readFP, folder+path_sep()+'psf_data_'+string(index,format='(i2.2)')+'.txt',qtarget=15, $
 	nph=ntot, Xfp=x,Yfp=y,cosx1=cosX1,cosy1=cosY1,cosz1=cosz1,$
 	k=k,alpha1=a1,alpha2=a2,nSelected=nSel
 
@@ -121,11 +123,11 @@ return,hewVarcsec
 
 end
 
-	folder='E:\Dati_applicazioni\idl\usr_contrib\kov\test_data\F10D394ff010_thsx'
+	folder=fn('test\test_data\F10D394ff010_thsx')
 	zvector=vector(-30.,30.,100)
 	;for index=4,4 do begin
 	index=4
-	hew=bestFocal(folder,index,zVector,figureErrorArcsec=0.,log='bestFocalLog.txt')
+	hew=bestFocal(folder,index,zVector,figureErrorArcsec=0.,log=0);'bestFocalLog.txt')
 	;endfor
 
 end

@@ -16,7 +16,7 @@ function getOAangle, folder,index,file=file,arcmin=arcmin,deg=deg
 		;mettere caso piu' generale in cui aggiunge il delimitatore solo se non gia' presente
 		folderprefix=folder+path_sep()
 	endelse
-	if n_elements(file) eq 0 then file='imp_offAxis.txt'
+	if n_elements(file) eq 0 then file='imp_offaxis.txt'
 	impfile=folderprefix+file
 	ang0=float(readNamelistVar(impFile,'ang0Arcmin'))
 	ang1=float(readNamelistVar(impFile,'ang1Arcmin'))
