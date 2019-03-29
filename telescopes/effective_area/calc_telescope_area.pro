@@ -62,14 +62,14 @@ function calc_telescope_area,infolder, outfolder,energy, roughness, anglerad=ang
 
 end
 
-infolder='../SEEJ_updated/current_version/data/tests/control/cubex/cubex_24shells_01/Config001'
-outfolder='data/test/results/cubex/cubex_24shells_01/Config001'
-outfolder='prova'
+;infolder='../SEEJ_updated/current_version/data/tests/control/cubex/cubex_24shells_01/Config001' 
+infolder='test/input/cubex_24shells_01/Config001'
+outfolder='test/results/tests_calc_telescope_area/cubex_24shells_01/Config001'
 
 roughness=4.
 energy=vector(0.1d,5d,50)
 off_axis=!NULL
 
-calc_telescope_area,infolder,outfolder,energy,roughness
+EA_m=calc_telescope_area(infolder,outfolder,energy,roughness)
 
 end

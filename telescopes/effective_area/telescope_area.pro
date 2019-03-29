@@ -63,48 +63,57 @@
 ;   Written by: Vincenzo Cotroneo 2019/03/26
 ;-
 
+function coating_reflex,coat,lam,angles,roughness=roughness
+  ;convert coating to reflectivity for a set of lambda and angles.
+  
+  if file_extension(coat) eq 'nk' || file_extension(coat) eq '' then  begin
+    ;assemble monolayer coatings
+    z=[300.] ;arbitrary thick coating for monolayer
+    materials=[coat,'Ni'] ;set as substrate
+    sigma=roughness
+  endif else if file_extension(coat) eq 'imd' then begin
+    ;multilayer structure description in imd format, load from file
+    readcol,c_folder+path_sep()+coat,th,materials,sigma,format='F,A,F'
+  endif else begin
+    ;multilayer structure description on three columns, load from file
+    readcol,c_folder+path_sep()+coat,th,materials,sigma,format='F,F,F'
+  endelse
+  materials = file_basename(materials)
+
+  nc=load_nc(lam,materials)
+  fresnel,90.-angles, lam, nc,z,sigma,ra=r_sel
+  
+  return,r_sel
+
+end
+
+function reflexshells,coatings,alpha,lam,roughness=roughness
+  ;loop through each coating and calculate effective area for all shells with the specific coating,
+  ;  populating reflectivity matrix with reflectivity for each Energy 
+  ;  in columns and for offaxis angles + coating in rows
+  ;
+  
+  coatingslist=coatings[uniq(coatings)]
+  reflex_m=dblarr(n_elements(alpha),n_elements(lam)) 
+  
+  foreach coat, coatingslist do begin
+    ish_sel=where(coatings eq coat,c)
+    if c ne 0 then $
+      reflex_m[ish_sel,*]= coating_reflex(coat,lam,alpha[ish_sel],roughness=roughness)
+  endforeach
+  return, reflex_m
+end
+
 
 function telescope_area,energy,alpha,acoll,coatings,roughness
   
-  if n_elements(outfolder) ne 0 then file_mkdir,outfolder
-  
-  nshell=n_elements(alpha)
-  nener=n_elements(energy)
   lam=12.398425d/energy
   if n_elements(roughness) eq 0 then roughness=0
   if n_elements(coating_folder) eq 0 then c_folder=''
-    
-  EA_m=dblarr(nshell,nener) ;vector with effective areas for each Energy in columns for offaxis angles in rows
-  coatingslist=coatings[uniq(coatings)]
   
-  ;loop through each coating and calculate effective area for all shells with the specific coating,
-  ;  populating effective area matrix
-  foreach coat, coatingslist do begin
-    
-    ish_sel=where(coatings eq coat,c)
-    if c ne 0 then begin
-      ;convert coating to materials
-      if file_extension(coat) eq 'nk' || file_extension(coat) eq '' then  begin
-        ;assemble monolayer coatings
-        z=[300.] ;arbitrary thick coating for monolayer
-        materials=[coat,'Ni'] ;set as substrate
-        sigma=roughness
-      endif else if file_extension(coat) eq 'imd' then begin
-        ;multilayer structure description in imd format, load from file
-        readcol,c_folder+path_sep()+coat,th,materials,sigma,format='F,A,F'
-        endif else begin
-        ;multilayer structure description on three columns, load from file
-        readcol,c_folder+path_sep()+coat,th,materials,sigma,format='F,F,F'
-      endelse
-      materials = file_basename(materials)
-      
-      nc=load_nc(lam,materials)
-      fresnel,90.-alpha[ish_sel], lam, nc,z,sigma,ra=r_sel
-      EA_m[ish_sel,*]=r_sel^2*Rebin(acoll[ish_sel], n_elements(ish_sel), nener)
-      
-    endif
-
-  endforeach
+  reflex_m=reflexshells(coatings,alpha,lam,roughness=roughness)
+  
+  EA_m=reflex_m^2*Rebin(acoll, n_elements(alpha), n_elements(energy))
 
   return, EA_m
 
@@ -114,9 +123,8 @@ end
 ;infolder contains telescope_geometry.dat and telescope_geometry_info, from which relevant geometrical
 ;  information acoll, angle and coating, are extracted.
 
-;infolder='../SEEJ_updated/current_version/data/tests/control/cubex/cubex_24shells_01/Config001' 
-infolder='test/input/cubex_24shells_01/Config001'
-outfolder='test/results/test_telescope_area/cubex_24shells_01/Config001'
+infolder='../SEEJ_updated/current_version/data/tests/control/cubex/cubex_24shells_01/Config001' 
+outfolder='data/test/results/cubex/cubex_24shells_01/Config001'
 
 a=read_datamatrix(infolder+path_sep()+'telescope_geometry.dat',skip=1)
 coatings=a[(size(a))[1]-1:*,*]
