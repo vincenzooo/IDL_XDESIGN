@@ -220,7 +220,7 @@ function Reflex_monolayer,angle,index
   if n_elements(angle) ne n_elements(index) then message, "ANGLE and INDEX must be same length"
   
   ANG=!PI/2.-Angle  ;convert to angle to normal in rad
-  NC=RIND
+  NC=index
   CT1=COS(ANG)
   ST1=SQRT(1.-CT1*CT1)
   ST2=ST1/NC
@@ -236,15 +236,18 @@ END
 
 function load_nk,energy,material
   readcol,material,l,r,i,comment=';'
-  
-
+  ;lam=12.398425d/energy
+  ;r_nk=interpol( l, r, lam)
+  ;i_nk=interpol( l, i, lam)
+  ;return, dcomplex(r_nk,i_nk)
   return, n
 end
 
 function test_reflex,energy,angle,material
   ;+
   ;return a 2D array with reflectivity as a function of energy (in keV) and angle (in radians).
-  ;use workarounds because this is not the intended way (but it could be made just building a list of photons)
+  ;this is an incomplete attempt to build a list of photons, removing common blocks from original IRT.
+  ;a working version with original common blocks and workaround is in material analysis.
   ;-
 
   ;create a list of `photons` each one with an angle and an energy
@@ -256,8 +259,15 @@ function test_reflex,energy,angle,material
   
   index=load_nk(material,ener)  ;read and interpolate refraction index at the energy of each photon  
   rind=reform(Rebin(index, n_elements(energy), n_elements(angle)),nph)
+  ;index=load_nk(ener,material)  ;read and interpolate refraction index at the energy of each photon  
+  ;rind_r=reform(Rebin(real_part(index), n_elements(energy), n_elements(angle)),nph)
+  ;rind_i=reform(Rebin(imaginary(index), n_elements(energy), n_elements(angle)),nph)
+
+
+
 
   R=Reflex_monolayer(angle,ener,rind)
+  ;R=Reflex_monolayer(a,complex(rind_r,rind_i))
   return, reform(r,n_elements(energy), n_elements(angle))
 
 end
