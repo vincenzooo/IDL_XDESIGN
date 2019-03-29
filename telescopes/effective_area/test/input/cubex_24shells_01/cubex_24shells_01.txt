@@ -1,0 +1,46 @@
+;;energy        energy of xray source [keV]
+;;Dmax          the largest diameter of the outermost shell [mm] - [min, max, step] when Dmax is variable
+;;variable      contains which parameter is varying
+;                currently limited to Dmax, nshell, and offax
+;;xaxis		used only make plots - establishes which variable will be on the x-axis
+;		 set to energy to plot energy on x-axis
+;                set to var to plot selected variable on x-axis
+;;halfFOV       half feild of view [arcmin]
+;;srcdis        distance between telescope and xray source [km]
+;;L1            length of the first section of optic [mm]
+;                this program always assumes L1=L2 so L1=1/2 of total length
+;;focallen      focal length in mm (from inflection to detector plane)
+;;offax         the off-axis angle of your xray source [arcmin] - [min, max, step] when offax is variable
+;;num_phtn      number of photons starting at your xray source
+;;doscatter     if 1, simulates surface micro-roughness
+;;pctL1         percent decrease of shell length as you move inward
+;		 used to maximize off-axis response
+;                pctL1 not currently being used - the lengths of the shells are constant
+;;nshell        number of shells being nested - [min, max, step] when nshell is variable
+;;filename	what to name generated files
+;;spacing	spacing between shells [mm; if !NULL then tight spacing]
+;;file_path     where to write output files
+;;reflc_path    where to read refectivity files
+
+energy:      0.5 6.5 0.1
+Dmax:       130.0  
+variable:   energy
+variable2:   offax
+variable3:   !NULL
+halfFOV:      30.0
+srcdis:    6000000000.
+L1:        55.0
+focallen:   500.0
+offax:        0.0 30.0 10.0
+num_phtn:      10000
+doscatter:        0
+microrough:        5 10 0.0001 
+pctL1:  40
+nshell:     24
+coating:     Ir
+vignette:      0
+filename:    cubex_24shells
+Dmin:   !NULL
+spacing:     1.8
+file_path: /proj/SEEJ/optics_modelling/lss/plots/Mar15/
+seed: 1

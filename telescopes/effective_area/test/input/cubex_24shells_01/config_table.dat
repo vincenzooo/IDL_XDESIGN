@@ -1,0 +1,2 @@
+;Name		nshell		Dmax [mm]	L1 [mm]	pct L1		FL [mm]		halfFOV [arcmin]	minthick [mm]	spacing [mm]	coating
+Config001	 24		 130		 55	 40		 500		 30			0.20		1.80		Ir
