@@ -116,7 +116,7 @@ end
 
 ;infolder='../SEEJ_updated/current_version/data/tests/control/cubex/cubex_24shells_01/Config001' 
 infolder='test/input/cubex_24shells_01/Config001'
-outfolder='test/results/cubex_24shells_01/Config001'
+outfolder='test/results/test_telescope_area/cubex_24shells_01/Config001'
 
 a=read_datamatrix(infolder+path_sep()+'telescope_geometry.dat',skip=1)
 coatings=a[(size(a))[1]-1:*,*]
@@ -130,8 +130,7 @@ roughness=4.
 energy=vector(0.1d,5d,50)  
 off_axis=!NULL
 
-EA_m=telescope_area(energy,alpha,acoll,coatings,roughness,$
-  outfolder=outfolder)
+EA_m=telescope_area(energy,alpha,acoll,coatings,roughness)
 
 ;; PLOT
 cleanup
