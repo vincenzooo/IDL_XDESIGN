@@ -63,53 +63,12 @@
 ;   Written by: Vincenzo Cotroneo 2019/03/26
 ;-
 
-function coating_reflex,coat,lam,angles,roughness=roughness
-  ;convert coating to reflectivity for a set of lambda and angles.
-  
-  if file_extension(coat) eq 'nk' || file_extension(coat) eq '' then  begin
-    ;assemble monolayer coatings
-    z=[300.] ;arbitrary thick coating for monolayer
-    materials=[coat,'Ni'] ;set as substrate
-    sigma=roughness
-  endif else if file_extension(coat) eq 'imd' then begin
-    ;multilayer structure description in imd format, load from file
-    readcol,c_folder+path_sep()+coat,th,materials,sigma,format='F,A,F'
-  endif else begin
-    ;multilayer structure description on three columns, load from file
-    readcol,c_folder+path_sep()+coat,th,materials,sigma,format='F,F,F'
-  endelse
-  materials = file_basename(materials)
-
-  nc=load_nc(lam,materials)
-  fresnel,90.-angles, lam, nc,z,sigma,ra=r_sel
-  
-  return,r_sel
-
-end
-
-function reflexshells,coatings,alpha,lam,roughness=roughness
-  ;loop through each coating and calculate effective area for all shells with the specific coating,
-  ;  populating reflectivity matrix with reflectivity for each Energy 
-  ;  in columns and for offaxis angles + coating in rows
-  ;
-  
-  coatingslist=coatings[uniq(coatings)]
-  reflex_m=dblarr(n_elements(alpha),n_elements(lam)) 
-  
-  foreach coat, coatingslist do begin
-    ish_sel=where(coatings eq coat,c)
-    if c ne 0 then $
-      reflex_m[ish_sel,*]= coating_reflex(coat,lam,alpha[ish_sel],roughness=roughness)
-  endforeach
-  return, reflex_m
-end
-
 
 function telescope_area,energy,alpha,acoll,coatings,roughness
   
   lam=12.398425d/energy
   if n_elements(roughness) eq 0 then roughness=0
-  if n_elements(coating_folder) eq 0 then c_folder=''
+  ;if n_elements(coating_folder) eq 0 then c_folder=''
   
   reflex_m=reflexshells(coatings,alpha,lam,roughness=roughness)
   

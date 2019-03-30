@@ -1,5 +1,5 @@
 function load_nk,lam,material
-  readcol,material+'.nk',l,r,i,comment=';',/quick
+  readcol,material,l,r,i,comment=';',/quick
   ;lam=12.398425d/energy
   r_nk=interpol( r, l, lam)
   i_nk=interpol( i, l, lam)
@@ -40,7 +40,7 @@ pro test_nk,energy,matlist
   lam=12.398425d/energy
   foreach mat, matlist do begin
     ;nk_ind=load_nk(lam,mat)
-    nk_ind=load_nk(lam,mat)
+    nk_ind=load_nk(lam,mat+'.nk')
     window,/free
     plot,energy,real_part(nk_ind),title=file_basename(mat)+' refraction index ',$
       xtitle='Energy(keV)',ytitle= 'Real part'

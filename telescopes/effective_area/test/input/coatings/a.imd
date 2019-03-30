@@ -1,0 +1,6 @@
+;   
+;  IMD Layer Data File
+;   
+;  Index Material Thickness [A] Roughness [A] Interface Gr. Int. Layers Gr. Int. Width [A] Gr. Int. Distribution [%]
+       1	a-C	       100.00000	       4.0000000	       0	       0	       0.0000000	       0.0000000
+       2	Ir	       300.00000	       4.0000000	       0	       0	       0.0000000	       0.0000000
