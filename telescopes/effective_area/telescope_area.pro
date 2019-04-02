@@ -64,6 +64,26 @@
 ;-
 
 
+function reflexshells,coatings,alpha,lam,roughness=roughness
+  ;loop through each coating and calculate effective area for all shells with the specific coating,
+  ;  populating reflectivity matrix with reflectivity for each Energy
+  ;  in columns and for offaxis angles + coating in rows
+  ;
+
+  ;cc list of coating for each shell
+  cc = n_elements(coatings) eq 1? replicate(coatings,n_elements(alpha)):coatings
+
+  coatingslist=coatings[uniq(cc)]
+  reflex_m=dblarr(n_elements(alpha),n_elements(lam))
+
+  foreach coat, coatingslist do begin
+    ish_sel=where(cc eq coat,c)
+    if c ne 0 then $
+      reflex_m[ish_sel,*]= coating_reflex(coat,lam,alpha[ish_sel],roughness=roughness)
+  endforeach
+  return, reflex_m
+end
+
 function telescope_area,energy,alpha,acoll,coatings,roughness
   
   lam=12.398425d/energy
@@ -71,8 +91,9 @@ function telescope_area,energy,alpha,acoll,coatings,roughness
   ;if n_elements(coating_folder) eq 0 then c_folder=''
   
   reflex_m=reflexshells(coatings,alpha,lam,roughness=roughness)
+  ac = (size (acoll))[0] eq 0 ? [acoll] : acoll
   
-  EA_m=reflex_m^2*Rebin(acoll, n_elements(alpha), n_elements(energy))
+  EA_m=reflex_m^2*Rebin(ac, n_elements(alpha), n_elements(energy))
 
   return, EA_m
 
@@ -82,25 +103,26 @@ end
 ;infolder contains telescope_geometry.dat and telescope_geometry_info, from which relevant geometrical
 ;  information acoll, angle and coating, are extracted.
 
-infolder='../SEEJ_updated/current_version/data/tests/control/cubex/cubex_24shells_01/Config001' 
-outfolder='data/test/results/cubex/cubex_24shells_01/Config001'
+cd, programrootdir()
 
-a=read_datamatrix(infolder+path_sep()+'telescope_geometry.dat',skip=1)
-coatings=a[(size(a))[1]-1:*,*]
-;alpha in deg, acoll in cm^2
-readcol,infolder+path_sep()+'telescope_geometry_info.dat',alpha,acoll,format='X,X,X,X,X,X,X,F,F,X'
+outfolder='test/results/test_telescope_area/cubex_24shells_01/Config001'
 
 file_mkdir,file_dirname(outfolder)
 ;--------------
 ; EXECUTION
 roughness=4.
-energy=vector(0.1d,5d,50)  
 off_axis=!NULL
+alpha=[1.8517,1.3425,0.5440]
+acoll=[7.3614,3.4260,0.4514]
+coat='Ir'
+coat=['Ir','test/input/coatings/IrC.imd','Ir']
 
-EA_m=telescope_area(energy,alpha,acoll,coatings,roughness)
+energy=10d*(findgen(100))/100.+0.5
+EA_m=TELESCOPE_AREA(energy,alpha,acoll,coat,4.) ;small telescope
+EA_tot=total(EA_m,1)
 
 ;; PLOT
-cleanup
+WHILE !D.Window GT -1 DO WDelete, !D.Window
 setstandarddisplay
 
 ;plot BY SHELL
@@ -121,5 +143,10 @@ plot,energy,EA_tot,xtitle='Energy (keV)',ytitle='Aeff (cm^2)',$
   title='Total telescope On-axis effective area'
 maketif,outfolder+path_sep()+'EA_tot'
 
+window,/free
+plot,energy,TELESCOPE_AREA(energy,alpha[1],acoll[1],'test/input/coatings/IrC.imd',4.),/nodata
+oplot,energy,TELESCOPE_AREA(energy,alpha[1],acoll[1],'test/input/coatings/IrC.imd',4.),color=2
+oplot,energy,TELESCOPE_AREA(energy,[alpha[1]],[acoll[1]],'Ir',4.) ,color=3
+legend,['IrC','Ir'],color=[2,3]
 
 end
