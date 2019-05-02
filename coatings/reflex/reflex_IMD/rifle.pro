@@ -109,7 +109,7 @@ function Rifle, th, lam, materials,z,sigma,c_thick,c_mat
     nc=load_nc(lam, materials)
     z2=z ;questo per impedire di restituire z modificato
   endelse
-  FRESNEL, th, lam, nc, z2,sigma, RA=RA  ;,RS=RS,RP=RP
+  FRESNEL, th, lam, nc, z2,sigma, RA=RA, mfc_model=1 ;mfc_model=1 treats reflectivity reduction according to nevot-croce ;,RS=RS,RP=RP
   return,ra
 end
 
