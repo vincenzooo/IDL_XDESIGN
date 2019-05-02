@@ -18,10 +18,10 @@ pro save_results,EA_m,energy,alpha,outfolder=outfolder
 
   ;save effective area matrix
   if n_elements(outfolder) ne 0 then begin
-    eafile=outfolder+path_sep()+'Effective_Area.dat'  ;fnaddsubfix(outname,'_EA','.dat')
+    eafile=outfolder+path_sep()+'Effective_Area_onaxis.dat'  ;fnaddsubfix(outname,'_EA','.dat')
     write_datamatrix,eafile,Ea_m,y=energy,$
       header=';Energy(keV)    Aeff(cm^2)_for_sh_nr@angle_deg:'+$
-    strjoin(string(indgen(n_elements(alpha)))+strtrim(string(alpha,format='(f5.3)')),2),separator=string(9b)
+    strjoin(strjoin(string(indgen(n_elements(alpha)))+'@'+strtrim(string(alpha,format='(f5.3)'),2))),separator=string(9b)
   endif
 
   ;; PLOT
@@ -33,11 +33,14 @@ pro save_results,EA_m,energy,alpha,outfolder=outfolder
   plot,energy,energy*0,yrange=[0,max(EA_m)*1.1],xtitle='Energy (keV)',ytitle='Aeff (cm^2)',$
     title='Single shells effective area'
   foreach oa, alpha, ioa do begin
-    oplot,energy,EA_m[ioa,0:*],color=ioa+1
+    oplot,energy,EA_m[ioa,*],color=ioa+1
   endforeach
   legend,string(indgen(n_elements(alpha)))+string(alpha),col=indgen(n_elements(alpha))+1,pos=12,$
     title=string(9b)+'shell#'+string(9b)+'angle(deg)'
   if n_elements(outfolder) ne 0 then maketif,outfolder+path_sep()+'EA_shells'
+
+p=make_ea_plots(ea_m,energy,alpha)
+if n_elements(outfolder) ne 0 then p.save,outfolder+path_sep()+'EA_shells.png'
 
   ;Plot Total
   EA_tot=total(EA_m,1)
@@ -59,12 +62,13 @@ function calc_telescope_area,infolder, outfolder,energy, roughness, anglerad=ang
 
   save_results,EA_m,energy,alpha,outfolder=outfolder
 
+  return, EA_m
 
 end
 
 ;infolder='../SEEJ_updated/current_version/data/tests/control/cubex/cubex_24shells_01/Config001' 
-infolder='test/input/cubex_24shells_01/Config001'
-outfolder='test/results/tests_calc_telescope_area/cubex_24shells_01/Config001'
+infolder='data/tests/control/cubex/cubex_24shells_01/Config001'
+outfolder='data/test/results/tests_calc_telescope_area/cubex_24shells_01/Config001'
 
 roughness=4.
 energy=vector(0.1d,5d,50)

@@ -91,7 +91,7 @@ function telescope_area,energy,alpha,acoll,coatings,roughness
   ;if n_elements(coating_folder) eq 0 then c_folder=''
   
   reflex_m=reflexshells(coatings,alpha,lam,roughness=roughness)
-  ac = (size (acoll))[0] eq 0 ? [acoll] : acoll
+  ac = (size (acoll))[0] eq 0 ? [acoll] : acoll   ;make acoll a vector if scalar
   
   EA_m=reflex_m^2*Rebin(ac, n_elements(alpha), n_elements(energy))
 
@@ -99,11 +99,12 @@ function telescope_area,energy,alpha,acoll,coatings,roughness
 
 end
 
+;test more elaborated than needed. It should be moved to other file and replace with minimal example.
 
 ;infolder contains telescope_geometry.dat and telescope_geometry_info, from which relevant geometrical
 ;  information acoll, angle and coating, are extracted.
 
-cd, programrootdir()
+
 
 outfolder='test/results/test_telescope_area/cubex_24shells_01/Config001'
 
@@ -150,3 +151,4 @@ oplot,energy,TELESCOPE_AREA(energy,[alpha[1]],[acoll[1]],'Ir',4.) ,color=3
 legend,['IrC','Ir'],color=[2,3]
 
 end
+
