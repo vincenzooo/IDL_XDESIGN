@@ -47,8 +47,9 @@ pro plot_circle,radius,rsuppressed=rsuppressed,center=center,np=np,oplot=oplot,$
 
   if n_elements(np) eq 0 then np=100
   if n_elements(rsuppressed) eq 0 then rsuppressed=0
-  if rsuppressed ne 0 and n_elements(center) ne 0 then $
-    if not array_equal(center,[0,0]) then message,"you can suppress radius only if center is on origin"
+  if n_elements(center) eq 0 then c=[0,0] else c=center
+  if rsuppressed ne 0 then $
+    if not array_equal(c,[0,0]) then message,"you can suppress radius only if center is on origin"
   th=findgen(np)/(np-1)*!PI*2
   
   ;if n_elements(radius) gt 1 then begin
@@ -57,8 +58,8 @@ pro plot_circle,radius,rsuppressed=rsuppressed,center=center,np=np,oplot=oplot,$
     
     for i =0,n_elements(radius)-1 do begin
       r=replicate(radius[i],np)
-      x=r*cos(th)+center[0]
-      y=r*sin(th)+center[1]
+      x=r*cos(th)+c[0]
+      y=r*sin(th)+c[1]
       ;suppressedRadiusPlot,x,y,rsuppressed,/polar,center=center,$
       ;  _extra=e,oplot=oplot,color=color[i]
       if keyword_set(oplot) then $
@@ -70,4 +71,47 @@ pro plot_circle,radius,rsuppressed=rsuppressed,center=center,np=np,oplot=oplot,$
   ;endif
 
 
+end
+
+function plot_circle,radius,rsuppressed=rsuppressed,center=center,np=np,oplot=oplot,$
+  color=color,_extra=e
+
+  if n_elements(np) eq 0 then np=100
+  if n_elements(rsuppressed) eq 0 then rsuppressed=0
+  if n_elements(center) eq 0 then c=[0,0] else c=center
+  if rsuppressed ne 0 then $
+    if not array_equal(c,[0,0]) then message,"you can suppress radius only if center is on origin"
+  th=findgen(np)/(np-1)*!PI*2
+
+  ;if n_elements(radius) gt 1 then begin
+  if n_elements(color) eq 1 then color=replicate(color,n_elements(radius)) $
+  else if n_elements(color) ne n_elements(radius) then color=plotcolors(n_elements(radius))
+
+  for i =0,n_elements(radius)-1 do begin
+    r=replicate(radius[i],np)
+    x=r*cos(th)+c[0]
+    y=r*sin(th)+c[1]
+    ;suppressedRadiusPlot,x,y,rsuppressed,/polar,center=center,$
+    ;  _extra=e,oplot=oplot,color=color[i]
+    if keyword_set(oplot) then $
+      p=plot (x-rsuppressed,y,color=color[i],/overplot,_extra=e) $
+    else $
+      p=plot (x-rsuppressed,y,color=color[i],_extra=e)
+    oplot=1
+  endfor
+  ;endif
+  return, p 
+
+end
+
+f=plot_circle(10,aspect_ratio=1)
+f=plot_circle(5,/oplot)
+f=plot_circle([0.5,2,3],/oplot,color='blue')
+f=plot_circle([1.5,2.5,3.5],/oplot,color=['green','orange','yellow'])
+
+window,/free
+plot_circle,10
+plot_circle,5,/oplot
+plot_circle,[0.5,2,3],/oplot,color='blue'
+plot_circle,[1.5,2.5,3.5],/oplot,color=['green','orange','yellow']
 end
