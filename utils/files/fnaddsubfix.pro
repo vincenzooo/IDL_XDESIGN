@@ -1,6 +1,7 @@
-function fnAddSubfix,filename,subfix,newext,silent=silent,basename=basename
+function fnAddSubfix,filename,subfix,newext,pre=pre,silent=silent,basename=basename
 ;add SUBFIX to FILENAME (before the extension)
 ;if NEWEXT (including the dot) is provided use it to replace the extension.
+;if PRE is added, it is used as a prefix in same way as Subfix argument is used as subfix.
 ;if SILENT is set an empty variable is returned if FILENAME is not defined
 ;  (useful for managing optional arguments inside procedures).
 ;if BASENAME is set, then return only the basename (path removed).
@@ -24,7 +25,8 @@ function fnAddSubfix,filename,subfix,newext,silent=silent,basename=basename
   if folder eq '.' then folder='' else folder=folder+path_sep()
   name=file_basename(filename,extension)
   if n_elements(newext) ne 0 then extension=newext
-  result=n_elements(extension) eq 0?folder+name+subfix:(folder+name+subfix+extension)
+  if n_elements(pre) eq 0 then pre=""
+  result=n_elements(extension) eq 0?folder+pre+name+subfix:(folder+pre+name+subfix+extension)
   if keyword_set(basename) then result=file_basename(result)
   return,result
   

@@ -1,8 +1,25 @@
+;+
+;LOAD_NK, LAM, MATERIAL
+;
+; Return complex refraction indices as read from file `Material` interpolated
+;   at wavelength lam.
+; lam doesn't need to be sorted.
+;-
+
 function load_nk,lam,material
-  readcol,material,l,r,i,comment=';',/quick
+  
+  
+  
+  ;remove /silent for debug, make sure it is not called too many times:
+  readcol,material,l,r,i,comment=';',/quick,/silent   
   ;lam=12.398425d/energy
-  r_nk=interpol( r, l, lam)
-  i_nk=interpol( i, l, lam)
+
+  isel=where(l gt 0,c)
+  if c eq 0 then message, "file read, but no value found on optical constants file ",fil
+
+  r_nk=interpol( r[isel], l[isel], lam)
+  i_nk=interpol( i[isel], l[isel], lam)
+    
   return, dcomplex(r_nk,i_nk)
   ;return, n
 end
@@ -36,7 +53,7 @@ pro test_nk,energy,matlist
   ;COMMON RAYS,X,Y,Z,QX,QY,QZ,LAM,NUM,NIND
   ;COMMON PHYS,DIFF,ORDS,REFMAT,LENSMAT,SUNITS,WUNITS
 
-  wunits=''  ;will use default (Angstrom)
+  ;wunits=''  ;will use default (Angstrom)
   lam=12.398425d/energy
   foreach mat, matlist do begin
     ;nk_ind=load_nk(lam,mat)
@@ -54,9 +71,10 @@ end
 
 WHILE !D.Window GT -1 DO WDelete, !D.Window ;close all currently open windows
 setstandarddisplay,/tek
+cd,programrootdir()
 
 print,"test NK"
-nkpath='nk.dir'
+nkpath='/home/cotroneo/usr_contrib/kov/coatings/reflex/test/input/nk'
 ;nkpath='irt_converted'
 npoints=100
 en_range=[0.1 ,5.]

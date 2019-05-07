@@ -1,6 +1,6 @@
 function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
           nrows=nrows,ncols=n_col,delimiter=delimiter,numline=nl,$
-          header=header,type=type,stripblank=strip ;,comment=comment
+          header=header,type=type,stripblank=strip,x=x,y=y ;,comment=comment
 
 ; the number of columns is determined by last line read.
 ;return a matrix of string [ncols,nrows]. NROWS and NCOLS are output parameters.
@@ -13,8 +13,10 @@ function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
 ; content of the first SKIPLINE lines.
 ;comment (TODO) is a string or an array of strings. A line is ignored if it starts by any
 ; of the characters in the vector. 
+; X and Y optional return argument, if variable is passed, get from stripping first row and columns
 
 ;If STRIPBLANK is set, blank lines are ignored
+;2019/05/01 added x and y optional return argument, if present, strip from matrix first row and col. 
 
 ;2013/02/09 added keyword type. 
 ;If TYPE is specified, Expression is converted to the specified type. Otherwise data
@@ -96,6 +98,15 @@ while ~ EOF(unit0) and i lt numline do begin
   endelse
 endwhile
 free_lun, unit0
+if arg_present(x) then begin
+  x=data[*,0]
+  data=data[*,1:*]
+  if arg_present(y) then x=x[1:*] ;remove the corner element
+endif
+if arg_present(y) then begin
+  y=data[0,*]
+  data=data[1:*,*]
+endif
 if n_elements(type) ne 0 then data=fix(data,type=type)
 return,data
 end
