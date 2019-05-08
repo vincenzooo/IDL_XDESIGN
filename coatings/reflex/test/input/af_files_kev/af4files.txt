@@ -1,0 +1,10 @@
+files usati dal programma areafom4.
+alcuni usati anche dal programma superplot.
+
+pltset.dat
+silicon.dat
+sub.dat
+tungsten.dat
+diam.dat
+trans_air.dat
+

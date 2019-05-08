@@ -1,24 +1,36 @@
 ;+
 ;LOAD_NK, LAM, MATERIAL
 ;
+;;Complex optical constants for lam from file
 ; Return complex refraction indices as read from file `Material` interpolated
 ;   at wavelength lam.
-; lam doesn't need to be sorted.
+; lam doesn't need to be sorted. If Lam is not provided, return as from file.
 ;-
 
 function load_nk,lam,material
   
-  
-  
   ;remove /silent for debug, make sure it is not called too many times:
-  readcol,material,l,r,i,comment=';',/quick,/silent   
+  ;readcol,material,l,r,i,comment=';',/quick,/silent   
   ;lam=12.398425d/energy
+  g=read_datamatrix(material,skip=1,type=5)
+  l=g[0,*]
+  r=g[1,*]
+  i=g[2,*]
+  
 
   isel=where(l gt 0,c)
   if c eq 0 then message, "file read, but no value found on optical constants file ",fil
-
-  r_nk=interpol( r[isel], l[isel], lam)
-  i_nk=interpol( i[isel], l[isel], lam)
+  
+  if n_elements(lam) ne 0 then begin
+    r_nk=interpol( r[isel], l[isel], lam)
+    i_nk=interpol( i[isel], l[isel], lam)
+  endif else begin
+    r_nk=r[isel]
+    i_nk=i[isel]    
+    lam=l[isel]
+    if n_elements(r_nk) ne n_elements(i_nk) or n_elements(r_nk) ne n_elements(i_nk) then $
+      message,"Something wrong in reading optical constants of "+mats
+  endelse
     
   return, dcomplex(r_nk,i_nk)
   ;return, n
