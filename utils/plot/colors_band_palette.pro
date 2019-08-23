@@ -14,10 +14,10 @@ function colors_band_palette, Vmin, Vmax, Colors, pmin=pmin, pmax=pmax,$
     ; colors_band_palette
     ;
     ; PURPOSE:
-    ; This function build a palette made of bands with gradient of colors in correspondence of
+    ; This function builds a palette made of bands with gradient of colors in correspondence of
     ;   a given range of values (e.g. can be used to generate a colorbar). Values that are not
-    ; assigned are kept from the current palette. 
-    ; The resulting palette is in a format that can be used with TVLCT 
+    ; assigned are kept unchanged from the current palette. 
+    ; The resulting palette is in a format (basically a Nx3 array) that can be used with TVLCT 
     ; to load it in direct graphic palette and probably to initialize a IDlgrPalette (non testato)
     ; in object graphics.
     ;
@@ -57,7 +57,7 @@ function colors_band_palette, Vmin, Vmax, Colors, pmin=pmin, pmax=pmax,$
     ; NoZeroPoint:  If set, create the palette from min to max without setting the zero point.
     ;
     ; OUTPUTS:
-    ; This function returns a palette V as a n-by-3 array of integers, where V[*,0], P[*,1], P[*,2]
+    ; This function returns a palette V as a n-by-3 array of integers, where V[*,0], V[*,1], V[*,2]
     ; are respectively, the R, G and B values. 
     ; If /load is set, the color table is also loaded in the current palette.
     ;
