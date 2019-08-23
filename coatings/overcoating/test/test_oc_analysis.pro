@@ -1,6 +1,7 @@
-; this was at the end of oc_analysis, not sure what is plotted,
+; this was at the end of oc_analysis, creates some plots 3D and slices,
 ; probably something related to SPIE papers in years around 2008.
-; One minimal test from below is also left in oc_analysis as inline test.
+; See comments before each plot.
+; One of these is also copied in oc_analysis as inline test.
 
 ;densita'  --
 ;C:1.9/2.3(graph)
@@ -30,31 +31,19 @@ conx={name:"Constellation-X", angles:[0.11,0.46], energy:[0.1,70.], color:11,lab
   linestyle:0}  ;labeloffset:[0.07,6.0]
 
 telescopes=[hxmt,simbolx,xeus,edge,eRosita,conx]
+mat=Pt     ;mat
+extracol=[[0,0,0,0],[255,255,255,255]]
+setstandarddisplay
+set_plot, 'win'
 
 ;-------------------------------------
 ;generate the 3d plot of angle-energy gain
-mat=Pt     ;mat
-
-extracol=[[0,0,0,0],[255,255,255,255]]
-
 oc_analisys ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
  ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated,optimize=1,besttvec=besttvec
-
 ; oc_analisys ,mat,[0,2.0],[0.1,10.],'a-C',80.,perc_gain=perc_gain,area_gain=area_gain,$
 ;   ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
  ;oc_analisys ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
  ;ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
- 
-
-set_plot, 'win'
-plot_gain,theta,ener,R_coated,R_bare,density,filename=mat.filename,$
-   perc_gain=perc_gain, area_gain=area_gain,telescopes=telescopes,window=5
-print,bestTVec
-window,2
-plot,bestTVec
-maketif,mat.filename+'_thick'
-
-
 
 ;-------------------------------plot ps
 set_plot,'ps'
@@ -63,8 +52,15 @@ Device, COLOR=1, BITS_PER_PIXEL=8
 plot_gain,theta,ener,R_coated,R_bare,mat.density,filename=mat.filename,$
   perc_gain=perc_gain, area_gain=area_gain,telescopes=telescopes,$
   window=3,extracolors=extracol
-
 device, /close
+
+set_plot, 'win'
+print,bestTVec
+window,2
+plot,bestTVec
+maketif,mat.filename+'_thick'
+
+;PLOT SLICES OF SQUARE REFLECTIVITY AND PERCENTUAL GAIN FOR FIXED ANGLE
 ;-------------------------------
 set_plot, 'PS'
 ;window,8
@@ -94,6 +90,8 @@ DEVICE, XSIZE=7, YSIZE=5, /INCHES
 device,/close
 ;--------------------------------
 
+
+;PLOT SLICES OF SQUARE REFLECTIVITY AND PERCENTUAL GAIN FOR FIXED ENERGY 
 ;-------------------------------
 set_plot, 'PS'
 device , FILE='reflex2_4.5keV.ps'
@@ -104,6 +102,7 @@ oplot, ener,R_bare[*,i_en4500]^2,color=100,linestyle=2
 legend,["Pt","Pt + C(80 A)"],position=12,color=[!P.color,100]
 device,/close
 device , FILE='gain2_4.5keV.ps'
+
 ysize_st=!D.Y_SIZE
 device,ysize=5
 plot,  90-theta,pgain[*,i_en4500],ytitle='% Gain',xtitle='Incidence angle (deg)'
@@ -113,9 +112,8 @@ DEVICE, XSIZE=7, YSIZE=5, /INCHES
 device,/close
 ;--------------------------------
 
-setstandarddisplay
-;set_plot, 'win'
 
+; PLOT A SET OF SLICES OF AREA GAIN AT FIXED ANGLE AND ENERGY 
 ;-------------------------------
 set_plot, 'PS'
 ;window,8
