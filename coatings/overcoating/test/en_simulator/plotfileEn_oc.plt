@@ -12,7 +12,7 @@ pause -1
 set terminal png
 set out 'PtC_0.1000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -25,7 +25,7 @@ pause -1
 set terminal png
 set out 'PtC_0.1500.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -38,7 +38,7 @@ pause -1
 set terminal png
 set out 'PtC_0.2000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -51,7 +51,7 @@ pause -1
 set terminal png
 set out 'PtC_0.3000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -64,7 +64,7 @@ pause -1
 set terminal png
 set out 'PtC_0.4000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -77,7 +77,7 @@ pause -1
 set terminal png
 set out 'PtC_0.5000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -90,7 +90,7 @@ pause -1
 set terminal png
 set out 'PtC_0.6000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -103,7 +103,7 @@ pause -1
 set terminal png
 set out 'PtC_0.7000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -116,7 +116,7 @@ pause -1
 set terminal png
 set out 'PtC_0.8000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -129,7 +129,7 @@ pause -1
 set terminal png
 set out 'PtC_0.9000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -142,7 +142,7 @@ pause -1
 set terminal png
 set out 'PtC_1.0000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -155,7 +155,7 @@ pause -1
 set terminal png
 set out 'PtC_1.1000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -168,7 +168,7 @@ pause -1
 set terminal png
 set out 'PtC_1.2000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -181,7 +181,7 @@ pause -1
 set terminal png
 set out 'WC_0.1000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -194,7 +194,7 @@ pause -1
 set terminal png
 set out 'WC_0.1500.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -207,7 +207,7 @@ pause -1
 set terminal png
 set out 'WC_0.2000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -220,7 +220,7 @@ pause -1
 set terminal png
 set out 'WC_0.3000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -233,7 +233,7 @@ pause -1
 set terminal png
 set out 'WC_0.4000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -246,7 +246,7 @@ pause -1
 set terminal png
 set out 'WC_0.5000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -259,7 +259,7 @@ pause -1
 set terminal png
 set out 'WC_0.6000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -272,7 +272,7 @@ pause -1
 set terminal png
 set out 'WC_0.7000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -285,7 +285,7 @@ pause -1
 set terminal png
 set out 'WC_0.8000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -298,7 +298,7 @@ pause -1
 set terminal png
 set out 'WC_0.9000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -311,7 +311,7 @@ pause -1
 set terminal png
 set out 'WC_1.0000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -324,7 +324,7 @@ pause -1
 set terminal png
 set out 'WC_1.1000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -337,7 +337,7 @@ pause -1
 set terminal png
 set out 'WC_1.2000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -350,7 +350,7 @@ pause -1
 set terminal png
 set out 'IrC_0.1000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -363,7 +363,7 @@ pause -1
 set terminal png
 set out 'IrC_0.1500.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -376,7 +376,7 @@ pause -1
 set terminal png
 set out 'IrC_0.2000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -389,7 +389,7 @@ pause -1
 set terminal png
 set out 'IrC_0.3000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -402,7 +402,7 @@ pause -1
 set terminal png
 set out 'IrC_0.4000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -415,7 +415,7 @@ pause -1
 set terminal png
 set out 'IrC_0.5000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -428,7 +428,7 @@ pause -1
 set terminal png
 set out 'IrC_0.6000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -441,7 +441,7 @@ pause -1
 set terminal png
 set out 'IrC_0.7000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -454,7 +454,7 @@ pause -1
 set terminal png
 set out 'IrC_0.8000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -467,7 +467,7 @@ pause -1
 set terminal png
 set out 'IrC_0.9000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -480,7 +480,7 @@ pause -1
 set terminal png
 set out 'IrC_1.0000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -493,7 +493,7 @@ pause -1
 set terminal png
 set out 'IrC_1.1000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -506,7 +506,7 @@ pause -1
 set terminal png
 set out 'IrC_1.2000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -519,7 +519,7 @@ pause -1
 set terminal png
 set out 'AuC_0.1000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -532,7 +532,7 @@ pause -1
 set terminal png
 set out 'AuC_0.1500.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -545,7 +545,7 @@ pause -1
 set terminal png
 set out 'AuC_0.2000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -558,7 +558,7 @@ pause -1
 set terminal png
 set out 'AuC_0.3000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -571,7 +571,7 @@ pause -1
 set terminal png
 set out 'AuC_0.4000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -584,7 +584,7 @@ pause -1
 set terminal png
 set out 'AuC_0.5000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -597,7 +597,7 @@ pause -1
 set terminal png
 set out 'AuC_0.6000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -610,7 +610,7 @@ pause -1
 set terminal png
 set out 'AuC_0.7000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -623,7 +623,7 @@ pause -1
 set terminal png
 set out 'AuC_0.8000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -636,7 +636,7 @@ pause -1
 set terminal png
 set out 'AuC_0.9000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -649,7 +649,7 @@ pause -1
 set terminal png
 set out 'AuC_1.0000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -662,7 +662,7 @@ pause -1
 set terminal png
 set out 'AuC_1.1000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 
@@ -675,7 +675,7 @@ pause -1
 set terminal png
 set out 'AuC_1.2000.png'
 replot
-set term X11
+set term win
 set output
 #------------------------------
 

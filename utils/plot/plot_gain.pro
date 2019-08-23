@@ -61,9 +61,14 @@
 ;-
 
 
-
-
 pro plot_rect,telescopes ,window_num, _extra=e
+  ;+
+  ;  telescopes is a list of telescope, each one in format
+  ;  simbolx={name:"Simbol X", angles:[0.1,0.23], energy:[0.5,80.],color:0,labeloffset:[0.15,5.],$
+  ;       linestyle:1}.
+  ;  They are plotted as rectangles on a window with x and y axis respectively ener and angle.
+  ;-
+
 
   if !D.NAME eq 'WIN' || !D.Name eq 'X' then begin
     curwin= !D.WINDOW
@@ -262,9 +267,6 @@ function test_reflex,energy,angle,material
   ;index=load_nk(ener,material)  ;read and interpolate refraction index at the energy of each photon  
   ;rind_r=reform(Rebin(real_part(index), n_elements(energy), n_elements(angle)),nph)
   ;rind_i=reform(Rebin(imaginary(index), n_elements(energy), n_elements(angle)),nph)
-
-
-
 
   R=Reflex_monolayer(angle,ener,rind)
   ;R=Reflex_monolayer(a,complex(rind_r,rind_i))
