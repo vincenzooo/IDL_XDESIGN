@@ -1,5 +1,6 @@
 function range, x,irange,size=size,noNan=noNaN,median=median,expand=eexpand
-;return the range (a vector [min,max]) of the array X.
+;return the range (a vector [min,max]) of the array X, or !Null if empty x
+;  (so it can be tested for n_elements).
 ;SIZE: if set return the width of the range (max-min)
 ;MEDIAN: output, return the median (MAX+MIN)/2
 ;NONAN: as default, min and max are called with the NaN keyword set. This
@@ -8,7 +9,10 @@ function range, x,irange,size=size,noNan=noNaN,median=median,expand=eexpand
 ;EXPAND: the range is expanded by this fraction of the range size (default=0).
 ;IRANGE: can be used to return a two vector with the index of the elements in X for min and max.
 
-if n_elements(x) eq 0 then message,'You must provide an argument'
+if n_elements(x) eq 0 then begin
+  message,'You must provide an argument',/INFO
+  return,!NULL
+endif
 if n_elements(eexpand) eq 0 then expand=0 else begin
   if eexpand le -0.5 then message,'Invalid value for EXPAND'
   expand=eexpand

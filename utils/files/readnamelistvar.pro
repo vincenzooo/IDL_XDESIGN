@@ -1,5 +1,5 @@
 function  readNamelistVar,file,varname,silent=silent,separator=sep,$
-          stringdelimiter=sd
+          stringdelimiter=sd, type=type
 ;read a namelist variable from file if found it.
 ;if not found and silent is set, return a string with an error message,
 ;if silent is not set, raise an error.
@@ -19,7 +19,9 @@ while ~ EOF(nf) do begin
 		;if string variable into apostrophes, remove them.
 		val=strtrim(l[1],2)
 		val=strsplit(val,stringDelimiter,/extract)
-		return,val[0]
+    val=val[0]
+    if n_elements(type) ne 0 then val=fix(val,type=type)
+    return,val
 	endif
 endwhile
 
