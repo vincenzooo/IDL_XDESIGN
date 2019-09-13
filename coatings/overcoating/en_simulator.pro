@@ -26,17 +26,19 @@
 
 
 pro en_simulator,samples, theta, en_vec,term=term,outfolder=outfolder, $
-  r_bare=r_bare,r_coated=r_coated   
-;simulate an energy scan with and without coating for each of the angles
-;and samples in the lists. Calculate statistics.
-;Write results on files.
-;use gnuplot to create good quality plots, term can be set to 'png' (default) or 'ps's
-;Note however that most of this file can be obtained from a matrix: here a file
-;  for each scan is generated, that is useless, whole matrix can be used.
-;Also all functions (plt file creation, statistic, and reflectivity files) are
-;  interlaced and not isolated. Can be done much better and simpler. 
-;Also, it pass energy range and use fixed 200 points, better to pass energy vector.
-;
+  r_bare=r_bare,r_coated=r_coated
+     
+  ;+
+  ;simulate an energy scan with and without coating for each of the angles
+  ;and samples in the lists. Calculate statistics.
+  ;Write results on files.
+  ;use gnuplot to create good quality plots, term can be set to 'png' (default) or 'ps's
+  ;Note however that most of this file can be obtained from a matrix: here a file
+  ;  for each scan is generated, that is useless, whole matrix can be used.
+  ;Also all functions (plt file creation, statistic, and reflectivity files) are
+  ;  interlaced and not isolated. Can be done much better and simpler. 
+  ;Also, it pass energy range and use fixed 200 points, better to pass energy vector.
+  ;-
 
   if n_elements(term) eq 0 then term = 'png'
 
@@ -73,7 +75,6 @@ pro en_simulator,samples, theta, en_vec,term=term,outfolder=outfolder, $
 
 		for j=0,n_elements(th)-1 do begin
 			;statistics
-
 			edgepos=max(where( en_vec lt 0.5))+1 ;start from 0.5 to avoid carbon edge
 			noneffen=where(R_coated[j,edgepos:*] lt R_bare[j,edgepos:*],ct)+edgepos
 			if (ct ne 0) then begin
@@ -135,7 +136,6 @@ samples=[Pt,W,Ir,Au]
 
 ; launch energy scan simulator
 en_vec=vector(0.1,10.,200)
-
 angles=[0.1,0.15, 0.2, 0.3,0.4, 0.5,0.6, 0.7,0.8,0.9, 1.0,1.1, 1.2]
 en_simulator,samples, angles, en_vec, r_bare=r_bare,r_coated=r_coated,outfolder='test/en_simulator'
 
