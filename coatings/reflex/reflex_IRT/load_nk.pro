@@ -12,7 +12,7 @@ function load_nk,lam,material
   ;remove /silent for debug, make sure it is not called too many times:
   ;readcol,material,l,r,i,comment=';',/quick,/silent   
   ;lam=12.398425d/energy
-  g=read_datamatrix(material,skip=1,type=5)
+  g=read_datamatrix(material,skip=1,type=5,comment=';')
   l=g[0,*]
   r=g[1,*]
   i=g[2,*]
@@ -86,7 +86,8 @@ setstandarddisplay,/tek
 cd,programrootdir()
 
 print,"test NK"
-nkpath='/home/cotroneo/usr_contrib/kov/coatings/reflex/test/input/nk'
+;nkpath='/home/cotroneo/usr_contrib/kov/coatings/reflex/test/input/nk'
+nkpath='C:\Users\kovor\Documents\IDL\user_contrib\imd\nk'
 ;nkpath='irt_converted'
 npoints=100
 en_range=[0.1 ,5.]
