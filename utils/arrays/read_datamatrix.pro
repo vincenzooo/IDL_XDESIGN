@@ -1,6 +1,6 @@
 function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
           nrows=nrows,ncols=n_col,delimiter=delimiter,numline=nl,$
-          header=header,type=type,stripblank=strip,x=x,y=y ;,comment=comment
+          header=header,type=type,stripblank=strip,x=x,y=y,comment=comment
 
 ; the number of columns is determined by last line read.
 ;return a matrix of string [ncols,nrows]. NROWS and NCOLS are output parameters.
@@ -44,28 +44,33 @@ function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
 ; in last week.
 ; Added STRIPBLANK flag
 ; author: Giorgia Sironi
-; edited by Vincenzo Cotroneo
+; modified by Vincenzo Cotroneo
 
-if n_elements(skip) eq 0 then skip=0
+if n_elements(skip) eq 0 then s=0 else s=skip
 ;read file, determine number of columns from the last line
 OPENR, unit0, file, /GET_LUN
 lines= strarr(1)
 i=0L
 while ~ EOF(unit0) do begin
   READF,unit0 , lines
-  if strlen(strtrim(lines,2)) ne 0 then lastline=lines
-  if keyword_set(strip) eq 0 or strlen(strtrim(lines,2)) ne 0 then i=i+1
+  if i lt s then s=s-1 else begin  
+    if strlen(strtrim(lines,2)) ne 0 then lastline=lines
+    ;ignore comments
+    if n_elements(comment) ne 0 then $
+      if in(strmid(strtrim(lines,2),0,1),comment) ne 1 then $
+        if keyword_set(strip) eq 0 or strlen(strtrim(lines,2)) ne 0 then i=i+1
+  endelse
 endwhile
 free_lun, unit0
 
 ;if n_elements(separator) eq  0 then separator=' ' do not work with tab
-nrows=i-skip
+nrows=i
 if n_elements(delimiter) eq 0 then ncols=n_elements(strsplit(lastline)) $
     else ncols=n_elements(strsplit(lastline,delimiter))
 data=strarr(ncols,nrows)
+
 ;create matrix and load lines in columns (the first index rotates first,
 ; it is first to address with * on first index)
-
 OPENR, unit0, file, /GET_LUN
 ;skip lines
 if arg_present(header) then header=[] ; the if is needed to not initialize 
@@ -79,16 +84,21 @@ if n_elements(nl) eq 0 then numline= nrows+1 else numline=nl
 while ~ EOF(unit0) and i lt numline do begin
   READF,unit0 , lines
   if strlen(strtrim(lines,2)) ne 0 then begin
-    if n_elements(fieldwidth) eq 0 then begin
-      if n_elements(delimiter) eq 0 then split=strsplit(lines,/extract) $
-      else split=strsplit(lines,/extract,delimiter)
-      data[*,i]=split
-    endif else begin
-      message,"if you want to use fieldwidth option, finish to write the code!"
-      for n=0,fix(strlen(lines)/fieldwidth)+1 do begin
-      endfor
-    endelse 
-    i=i+1
+    ;ignore comments
+    if n_elements(comment) ne 0 then begin
+      if in(strmid(strtrim(lines,2),0,1),comment) ne 1 then begin   
+        if n_elements(fieldwidth) eq 0 then begin
+          if n_elements(delimiter) eq 0 then split=strsplit(lines,/extract) $
+          else split=strsplit(lines,/extract,delimiter)
+          data[*,i]=split
+          i=i+1
+        endif else begin
+          message,"if you want to use fieldwidth option, finish to write the code!"
+          for n=0,fix(strlen(lines)/fieldwidth)+1 do begin
+          endfor
+        endelse  
+      endif   
+    endif
   endif else begin
     ;line was white
     if keyword_set(strip) eq 0 then begin
@@ -97,6 +107,7 @@ while ~ EOF(unit0) and i lt numline do begin
     endif
   endelse
 endwhile
+
 free_lun, unit0
 if arg_present(x) then begin
   x=data[*,0]
