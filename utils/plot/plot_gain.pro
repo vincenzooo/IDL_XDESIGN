@@ -139,13 +139,13 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
   if n_elements (ww) eq 0 then ww=4
   if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww,xsize=600,ysize=400 else $
     device,filename=filename+string(ww)+'.'+!D.name
-  pal=colors_band_palette(min(pgain), max(pgain), colors, pmin=32, pmax=254,bandvalsize=100,extracolors=ec,/TEK,/LOAD)
+  pal=colors_band_palette(min(pgain), max(pgain), colors, pmin=32, pmax=254,bandvalsize=0.01,extracolors=ec,/TEK,/LOAD)
   cont_image,pgain,(90-th),en,/colorbar,min_value=min_value,max_value=max_value,$
     title='R^2 percentual gain for '+filename,bar_title='% gain [(R_coat^2-R_bare^2)/(R_bare^2)]',$
     xtitle='Incidence angle (deg)', ytitle='Energy (keV)'
   contour, r_bare^2,90-th,en,/overplot,levels=[0.1,0.5],color=251,c_thick=1.1,c_linestyle=0,$
     c_annotation=["R^2=0.1","R^2=0.5"],c_charthick=2
-  plot_rect,telescopes, thick=1, color=251
+  plot_rect,telescopes, thick=1, color=25
   if n_elements(density) ne 0 then $
     oplot,(90-th),19.83*sqrt(density)/((90-th)*!PI/180),thick=2,linestyle=2,color=25
   maketif,filename+'_3D'
@@ -185,9 +185,9 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
     pind=pind[0:*:fix(th_points/ntracks)];vettore degli indici selezionati per il plot
     if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww+2,xsize=600,ysize=400 else $
       device,filename=filename+string(ww+2)+'.'+!D.name
-    multiplot,[1,3],mtitle=file_basename(filename),mxtitle='Energy (eV)',ygap=0.01  
+    ;multiplot,[1,3],mtitle=file_basename(filename),mxtitle='Energy ;(eV)',ygap=0.01  
     
-;    multi_plot,en,transpose(r_bare[pind,*]),yTitle='Reflectivity',back=cgcolor('white')
+    multi_plot,en,transpose(r_bare[pind,*]),yTitle='Reflectivity',back=cgcolor('white')
     plot,en,r_bare[pind[0],*],color=254, $  ;,yrange=[-10,100]
       yTitle='Reflectivity'
     for i=0,n_elements(pind)-1 do begin
@@ -221,34 +221,29 @@ end
 
 
 function Reflex_monolayer,angle,index
+ ; wrapper for IRT code, use with load_index
 
   if n_elements(angle) ne n_elements(index) then message, "ANGLE and INDEX must be same length"
   
   ANG=!PI/2.-Angle  ;convert to angle to normal in rad
-  NC=index
-  CT1=COS(ANG)
-  ST1=SQRT(1.-CT1*CT1)
-  ST2=ST1/NC
-  CT2=SQRT(1.-ST2*ST2)
-  TE=(CT1-NC*CT2)/(CT1+NC*CT2)
-  TM=(CT1-CT2/NC)/(CT1+CT2/NC)
-  RTE=double(TE*CONJ(TE))
-  RTM=double(TM*CONJ(TM))
-  R=(RTE+RTM)/2.
 
-  RETURN, R
+  RETURN, IRT_REFLEX(ANG,NC)
 END
 
 function load_index,material,energy
   readcol,material,l,r,i,comment=';'
-  lam=12.398425d/energy
-  r_nk=interpol( l, r, lam)
-  i_nk=interpol( l, i, lam)
-  return, dcomplex(r_nk,i_nk)
-  ;return, n
+   LAM=12.398425d/energy
+   
+   return,load_nk(LAM,MATERIAL)
+   
+;  r_nk=interpol( l, r, lam)
+;  i_nk=interpol( l, i, lam)
+;  return, dcomplex(r_nk,i_nk)  
+;  
+;  ;return, n
 end
 
-function test_reflex,energy,angle,material
+function xtest_reflex,energy,angle,material
   ;+
   ;return a 2D array with reflectivity as a function of energy (in keV) and angle (in radians).
   ;this is an incomplete attempt to build a list of photons, removing common blocks from original IRT.
@@ -271,6 +266,7 @@ function test_reflex,energy,angle,material
   R=Reflex_monolayer(angle,ener,rind)
   ;R=Reflex_monolayer(a,complex(rind_r,rind_i))
   return, reform(r,n_elements(energy), n_elements(angle))
+
 
 end
 
@@ -309,7 +305,7 @@ telescopes=[hxmt,simbolx,xeus,edge,eRosita,conx]
 
 ;this part create a reflectivity matrix, using new code obtained by adapting IRT reflectivity function.
 WHILE !D.Window GT -1 DO WDelete, !D.Window ;close all currently open windows
-nkpath='C:\Users\kovor\Documents\IDL\user_contrib\imd/nk'
+nkpath='C:\Users\kovor\Documents\IDL\user_contrib\imd\nk'
 
 npe=100
 npa=10
@@ -322,7 +318,7 @@ alpha_deg =dindgen(npa)/(npa-1)*(deg_range[1]-deg_range[0])+deg_range[0]
 
 
 ;test calling with two vectors
-
+setstandarddisplay,/tk
 r2D=test_reflex(energy, !PI/2- alpha_deg*!PI/180d,mat)
 print,r2d
 

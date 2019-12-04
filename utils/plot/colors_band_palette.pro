@@ -33,7 +33,8 @@ function colors_band_palette, Vmin, Vmax, Colors, pmin=pmin, pmax=pmax,$
     ; Result = COLORS_BAND_PALETTE (Vmin, Vmax,Colors)
     ;
     ; INPUTS:
-    ; Vmin, Vmax: The minimum and maximum values to be plotted (used to calculate the position of the reference level)
+    ; Vmin, Vmax: The minimum and maximum values to be plotted (used to calculate the position of the reference level). Typically use min and max
+    ; of data to plot to plot full scale.
     ;
     ; OPTIONAL INPUTS:
     ; Colors: a matrix [ncolors,2,3] containing starting and ending rgb values for
@@ -81,7 +82,9 @@ function colors_band_palette, Vmin, Vmax, Colors, pmin=pmin, pmax=pmax,$
     ; Vincenzo Cotroneo - Brera Astronomical Observatory, 14 June 2008
     ; vincenzo.cotroneo@brera.inaf.it
     ;---------------------------
+    ;2019/12/03 default zero is now 0 only if inside vmin and vmax (it was giving error), otherwise average of vmin vmax is used. Test works.
     ;todo improvements: 
+    ; - more extensive testing, bandsize, bandvalsize, etc..
     ; - management of color bands if they are not enough to
     ;cover all the values when a binsize is given (forse fatto).
     ; - usare tutti i colori se si seleziona nozero
@@ -104,13 +107,19 @@ function colors_band_palette, Vmin, Vmax, Colors, pmin=pmin, pmax=pmax,$
     ncol=n_elements(colors[0,0,*])
     
     ;find the index izeroCT corresponding to zero value
-    if n_elements(zero) eq 0 then zeroval=0 else zeroval=zero
+    ;default is if 0 is between min and max, it is used,
+    ;  otherwise use average.
+    if n_elements(zero) ne 0 then zeroval=zero $
+    else begin
+      if vmin lt 0 and vmax gt 0 then zeroval=0 else zeroval=(vmin+vmax)/2
+    endelse
+    
     if keyword_set(nozeropoint) then begin 
       izeroCT = pmin-1 
     endif else begin
       tmp=bytscl([vmin,zeroval,vmax], top=pmax-pmin)+pmin
-      if tmp[0] ne pmin then message,"Error in resampling Values to Palette: Vmin must correspond to Pmin"
-      if tmp[2] ne pmax then message,"Error in resampling Values to Palette: Vmax must correspond to Pmax"
+      if tmp[0] ne pmin then message,"Error in resampling Values to Palette: Vmin must correspond to Pmin",/info
+      if tmp[2] ne pmax then message,"Error in resampling Values to Palette: Vmax must correspond to Pmax",/info
       izeroCT=tmp[1]
     endelse
     
@@ -144,7 +153,8 @@ function colors_band_palette, Vmin, Vmax, Colors, pmin=pmin, pmax=pmax,$
        		print, "-----------------"
        		ncolperband=fix(npal/(ncol-1))
        	endif else begin
-    		  ncolperband=bandsize
+       	  ; it fails if bandvalsize e' troppo grande
+    		  ncolperband=bandsize 
     	endelse
     endif
     ;
@@ -203,6 +213,8 @@ end
 ;TEST
  for i=0,255 do tvlct,0,0,0,i  ;completely black palette
  values=[-20,-10,0,11,21,33,49,50] ;to set zero. Only min and max matter: [-20,50]
+ 
+ ;set colors from 101 to 200 with bandsize 20 over all black palette
  ct1=colors_band_palette(min(values),max(values),pmin=101,pmax=200,bandvalsize=20,/load)
 ; ---- check ----
  print,transpose([[findgen(!D.TABLE_SIZE)],[ct1]]) ;print: index, R, G, B

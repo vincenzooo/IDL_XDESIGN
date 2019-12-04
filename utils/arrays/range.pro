@@ -6,7 +6,7 @@ function range, x,irange,size=size,noNan=noNaN,median=median,expand=eexpand
 ;NONAN: as default, min and max are called with the NaN keyword set. This
 ;   ignores the invalid values NaN. Set NONAN to disable this option (invalid results
 ;   will be returned for NaN values).
-;EXPAND: the range is expanded by this fraction of the range size (default=0).
+;EXPAND: the range is expanded by this fraction of the range size (default=0). Useful to 
 ;IRANGE: can be used to return a two vector with the index of the elements in X for min and max.
 
 if n_elements(x) eq 0 then begin
