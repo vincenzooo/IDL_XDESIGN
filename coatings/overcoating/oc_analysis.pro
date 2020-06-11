@@ -1,6 +1,6 @@
 ;VC 2019/03/22 this was plotgain, that was merged with routine in plot, leaving here the part with analysis.
 
-pro oc_analisys ,mat_struct,th_range,En_range,c_mat,c_thick,perc_gain=perc_gain,$
+pro oc_analysis ,mat_struct,th_range,En_range,c_mat,c_thick,perc_gain=perc_gain,$
   area_gain=area_gain,optimize=optimize,theta=th,ener=en,r_bare=r_bare,$
   r_coated=r_coated,besttvec=besttvec
   
@@ -106,7 +106,7 @@ end
   
   extracol=[[0,0,0,0],[255,255,255,255]]
         
-  oc_analisys ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
+  oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
    ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated,optimize=1,besttvec=besttvec
    
   plot_gain,theta,ener,R_coated,R_bare,density,filename=mat.filename,$
@@ -116,9 +116,9 @@ end
   plot,bestTVec
   maketif,mat.filename+'_thick'
   
-;  oc_analisys ,mat,[0,2.0],[0.1,10.],'a-C',80.,perc_gain=perc_gain,area_gain=area_gain,$
+;  oc_analysis ,mat,[0,2.0],[0.1,10.],'a-C',80.,perc_gain=perc_gain,area_gain=area_gain,$
 ;    ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
-  ;oc_analisys ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
+  ;oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
     ;ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
 ;  
 ;  plot_gain,theta,ener,R_coated,R_bare,mat.density,filename=mat.filename,$

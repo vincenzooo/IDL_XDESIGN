@@ -38,11 +38,11 @@ set_plot, 'win'
 
 ;-------------------------------------
 ;generate the 3d plot of angle-energy gain
-oc_analisys ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
+oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
  ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated,optimize=1,besttvec=besttvec
-; oc_analisys ,mat,[0,2.0],[0.1,10.],'a-C',80.,perc_gain=perc_gain,area_gain=area_gain,$
+; oc_analysis ,mat,[0,2.0],[0.1,10.],'a-C',80.,perc_gain=perc_gain,area_gain=area_gain,$
 ;   ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
- ;oc_analisys ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
+ ;oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
  ;ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
 
 ;-------------------------------plot ps

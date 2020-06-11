@@ -7,7 +7,7 @@
 ; lam doesn't need to be sorted. If Lam is not provided, return as from file.
 ;-
 
-function load_nk,lam,material
+function LOAD_NK,LAM,MATERIAL
   
   ;remove /silent for debug, make sure it is not called too many times:
   ;readcol,material,l,r,i,comment=';',/quick,/silent   
@@ -17,7 +17,7 @@ function load_nk,lam,material
   r=g[1,*]
   i=g[2,*]
   
-
+; filter lambda >0 (es. to exclude terminating values -1 in original IRT optical constants)
   isel=where(l gt 0,c)
   if c eq 0 then message, "file read, but no value found on optical constants file ",fil
   
@@ -25,6 +25,7 @@ function load_nk,lam,material
     r_nk=interpol( r[isel], l[isel], lam)
     i_nk=interpol( i[isel], l[isel], lam)
   endif else begin
+    ;if lambda was not passed return on lambda as read from optical constants file.
     r_nk=r[isel]
     i_nk=i[isel]    
     lam=l[isel]

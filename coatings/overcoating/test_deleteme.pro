@@ -36,7 +36,7 @@ mat=Ir     ;mat
 
 extracol=[[0,0,0,0],$
   [255,255,255,255]]
-;oc_analisys ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
+;oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
 ; ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated,optimize=1,besttvec=besttvec
 ;plot_gain,theta,ener,R_coated,R_bare,density,filename=mat.filename,$
 ;   perc_gain=perc_gain, area_gain=area_gain,telescopes=telescopes,window=5
@@ -46,9 +46,9 @@ extracol=[[0,0,0,0],$
 ;maketif,mat.filename+'_thick'
 
 
-oc_analisys ,mat,[0,2.0],[0.1,10.],'a-C',80.,perc_gain=perc_gain,area_gain=area_gain,$
+oc_analysis ,mat,[0,2.0],[0.1,10.],'a-C',80.,perc_gain=perc_gain,area_gain=area_gain,$
   ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
-;oc_analisys ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
+;oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
 ;ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
 
 plot_gain,theta,ener,R_coated,R_bare,mat.density,filename=mat.filename,$
