@@ -23,5 +23,5 @@ This is no long actively maintained, and in current status it is difficult to fi
 A possible starting point can be `cmmdatafile__define`, `cmmsurface__definedev`, `cmmprofile__define` in
 `pool/surfaces`.
 Most of the work was ported to or continued (and improved) in python:
-https://github.com/vincenzooo/pyXTel
+https://github.com/vincenzooo/pyXSurf
 
