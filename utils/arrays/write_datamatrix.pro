@@ -58,10 +58,12 @@ if n_elements(X) ne 0 then begin
   data=[[string(x)],[data]]
 endif
 if n_elements(Y) ne 0 then begin
-  if n_elements(x) ne 0 then yy=[n_elements(padding) eq 0?'0.0':padding,string(y)]
   if n_elements(Y) ne nrow then message,'non matching number of rows,'+$
-        newline()+'data: '+string(nrow)+newline()+$
-        'Y:'+string(n_elements(Y)) else yy = y
+    newline()+'data: '+string(nrow)+newline()+$
+    'Y:'+string(n_elements(Y))
+  
+  if n_elements(x) ne 0 then yy=[n_elements(padding) eq 0?'0.0':padding,string(y)] else yy=string(y)
+  
   data=[transpose(yy),data]
 endif
 
