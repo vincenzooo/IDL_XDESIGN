@@ -1,8 +1,6 @@
-;   2019/03/25 moved to independent file from reflex_funk_beta
-
 ;+
 ; NAME:
-; RIFLE
+; REFLEX_IMD
 ;
 ; PURPOSE:
 ; Wrapper for IMD fresnel function. Launch with material names instead of
@@ -13,7 +11,7 @@
 ; Reflex
 ;
 ; CALLING SEQUENCE:
-; Reflex = Rifle(th, lam, materials,z,sigma)
+; Reflex = Reflex_IMD(th, lam, materials,z,sigma)
 ;
 ; INPUTS:
 ; Format of inputs is same as IMD FRESNEL procedure, with Materials replacing refraction indices
@@ -64,6 +62,7 @@
 
 ;
 ; MODIFICATION HISTORY:
+;   2020/06/14 renamed to REFLEX_IMD from Reflex_IMD
 ;   2019/03/25 moved to independent file from reflex_funk_beta
 ;   
 ;   Written by: Vincenzo Cotroneo, Date.
@@ -92,7 +91,7 @@
 
 
 
-function Rifle, th, lam, materials,z,sigma,c_thick,c_mat
+function Reflex_IMD, th, lam, materials,z,sigma,c_thick,c_mat
 
   ;------------------------------------
   if n_elements(c_thick) eq 0 then c_thick=0
@@ -113,3 +112,64 @@ function Rifle, th, lam, materials,z,sigma,c_thick,c_mat
   return,ra
 end
 
+; 2020/06/14 Add example.
+
+; CALLING SEQUENCE:
+;
+;       FRESNEL, THETA,LAMBDA,NC,Z[,SIGMA,INTERFACE,F,Q]
+;
+; INPUTS:
+;
+;       THETA - Scalar or 1-D array of incidence angles, in degrees,
+;               measured from the normal.
+;
+;       LAMBDA - Scalar or 1-D array of wavelengths.  Units for LAMBDA
+;                are the same as for Z and SIGMA.
+;
+;       NC - Complex array of optical constants.  The dimensions of NC
+;            must be (N_ELEMENTS(Z)+2,N_ELEMENTS(LAMBDA)).
+;
+;       Z - 1-D array of layer thicknesses. Units for Z are the same
+;           as for SIGMA and LAMBDA.
+;
+alpha=90.-1.3425 ;[1.8517,1.3425,0.5440]
+en_vec=5d*(findgen(100))/100.+0.5
+lam=12.398425/en_vec  ;entrano le energie in keV, le devo converire in A
+;sample structure without carbon
+z=[300.]
+mat='Au'
+c_mat='a-C'
+materials=[mat,'Ni']
+;repeated bilayer stack, rebin doesn't work with strings, use trick
+m_str=['Pt','a-C']
+mat_ml = [m_str[Reform(Rebin([0,1], 2, 10), 20)] ,'Ni']
+z_ml = [Reform(Rebin([20,40], 2, 10), 20)]
+sigma=0.
+c_thick=75d0
+
+nc_bare=load_nc(lam,materials)
+nc_coated=load_nc(lam,materials,c_mat)
+nc_ml=load_nc(lam,mat_ml)
+fresnel,alpha, lam, nc_bare,z,sigma,ra=r_bare
+fresnel,alpha, lam, nc_coated,[c_thick,z],sigma,ra=R_coated
+fresnel,alpha, lam, nc_ml,z_ml,sigma,ra=R_ml
+
+cleanup
+setstandarddisplay
+
+plot,en_vec,r_bare,yrange=[0,1]
+oplot,en_vec,r_coated,color = 2
+oplot,en_vec,r_ml, color=3
+
+legend,['Au','Au+C','Pt/C multilayer'],color=[1,2,3]
+
+;compare with direct fresnel formula
+nkpath='C:\Users\kovor\Documents\IDL\user_contrib\imd\nk'
+;r2=reflex2D_IRT(energy,!PI/180.*(90.-alpha),nkpath+path_sep()+mat+'.nk')
+;oplot,en_vec,r2,color=2,psym=1
+;wshow
+
+;window,1
+;plot,en_vec,r_bare-r2,title='Difference IMD - IRT'
+
+end

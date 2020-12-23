@@ -1,34 +1,18 @@
 function materialsgain,mat,ref,alpha_deg,energy,filename=filename
 
   ;+
-  ;compare two monolayer coatings creating two reflectivity matrices.
-  ;Returns are returned as a matrix nener x nangles x 2.
-  ;  and plotted with plot_gain.
+  ;Calculate and compare reflectivities of two monolayer coatings made of different materials in a range of angles and energies.
+  ; Uses REFLEX_IRT (IRT fresnel formula applied to list of photons)., plotting the comparison with PLOT_GAIN.
+  ;Results of reflectivity calculation are returned as a matrix nener x nangles x 2.
   ;If filename is provided files are saved according to PLOT_GAIN outputs,
   ;   if set to empty string, show plots without saving results.
   ;
-  ;Note it is independent on the library used for reflectivity calculation, 
-  ;  provided reflex2D can do the calculation and is able to find indices
-  ;  (here IRT indices are provided, in general same indices can work for all libraries).
-  ;
-  ;-
-
-  ;+
-  ; TREF2D
-  ;
-  ; VC 2019/03/29
-  ; compare reflectivity of different monolayer coatings in a range of angles and energies.
-  ; wrapper around REFLEX_IRT (IRT fresnel formula applied to list of photons).
-  ;
-  ; REFLEX_IRT (formerly IRT_REFLEX) calculates reflectivity for a list of photons, each one with angle and energy
-  ; REFLEX2D_IRT uses REFLEX_IRT to BUILD a 2D reflectivity matrix. Tests in plot_gain have a more evolved version.
-  ; MATERIALSGAIN: from two materials and a range of angles and energy, use plot_gain to show gain in 2d and 1d
-  ;
-  ; RUNNING THIS FILE runs MATERIALGAINS comparing a list of materials to a reference material (Ir).
-  ;     Index folder in IRT format must be a path relative to current path.
+  ; compare reflectivity of different monolayer coatings
+  ;     Index folder in IMD format must be a path relative to current path.
   ;
   ; OUTPUT: THREE FILE FOR EACH MATERIAL ARE CREATED IN THE CURRENT FOLDER.
   ;
+  ; funzione abbastanza inutile, nel senso che e' un semplice wrapper, ma non sarebbe molto piu' dura calcolare le matrici di riflettivita' con qualsiasi metodo (qui REFLEX2D_IRT) e poi plottarle con PLOT_GAIN. 
   ;-
   
   WHILE !D.Window GT -1 DO WDelete, !D.Window ;close all currently open windows  

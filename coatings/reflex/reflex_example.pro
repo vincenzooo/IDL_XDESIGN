@@ -21,7 +21,7 @@ function interface,angle,ener,materials=materials, lib=lib, loadindex=loadindex
     if ~keyword_set(loadindex) then ref= reflexDLL (ener, angle, dSpacing, rough, dll=dllFile ,/unload)
   endif else if lib eq 'imd' begin
     if ~keyword_set(loadindex) then load_nc,lam, materials,c_mat
-    Rifle, th, lam, materials,z,sigma,c_thick,c_mat
+    Reflex_IMD, th, lam, materials,z,sigma,c_thick,c_mat
   endif else begin
     if ~keyword_set(loadindex) then refind, materials
     ref=tref()

@@ -1,10 +1,11 @@
 ;load refraction indices using IMD function (moved here from refle_funk_beta. 
 ; call .run imdstart (or .run IMD and close all windows) before running this code, prompt should change to IMD>
 
-function load_nc,lam, matlist,c_mat
+function load_nc,lam, matlist,c_mat,medium=medium
   ;+
   ;load refraction indices from IMD optical constant for all 
-  ;  mterials in stack. 
+  ;  materials in stack for a list of wavelengths.
+  ;  return a complex matrix Nmat+1 x Nlam.
   ;  
   ;  to load the IMD code needed, call .run imd and close all windows
   ;  (or .run IMDstart if present) .
@@ -18,13 +19,34 @@ function load_nc,lam, matlist,c_mat
   ;    in imd_nk folder of IMD.
   ;  c_mat (string with overcoating material) is unnecessary, 
   ;     but it is kept for backwards compatibility.
+  ;  medium is usually vacuum, user can optionally provide a list of complex
+  ;     refraction indices (same length as lam).
+  ;
+  ;2020/12/23 modified for faster reading in case of repeated material multilayer, 
+  ;   each material is read only once.
   ;-
   materials=matlist
-  nc=replicate(dcomplex(1,0),n_elements(lam))
-  if n_elements(c_mat) ne 0 then materials=[c_mat,materials]
-  foreach mat, materials do nc=[[nc],[IMD_NK(mat,lam)]]
+  if n_elements(c_mat) ne 0 then materials = [c_mat,materials]
+  
+  ; medium to put as first layer
+  if n_elements(medium) eq 0 then $
+    nc = replicate(dcomplex(1,0),n_elements(lam)) $
+  else begin
+    if n_elements(medium) ne n_elements(lam) then message, 'if MEDIUM is provided, must be same length as LAM'
+    nc=medium
+  endelse  
+  ; read all materials indices in a case-insensitive hash
+  keys = unique (materials)
+  mat_hash = hash(/fold_case)
+  foreach mat, keys do begin
+    mat_hash[mat] = IMD_NK(mat,lam)
+  endforeach
 
-  return,transpose(nc)
+  foreach mat, materials do begin
+    nc=[[nc],[mat_hash(mat)]]
+  endforeach
+
+  return, transpose(nc)
 end
 
 

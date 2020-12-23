@@ -17,7 +17,7 @@ function opt_Rifle,th, lam,materials,z,sigma,E_range,c_mat,t_points=t_points,t_r
 		maxind=fix(total(en lt E_range[1]))
 	endelse
 
-	R_bare=Rifle(th, lam[minind:maxind],materials,z,sig)
+	R_bare=Reflex_IMD(th, lam[minind:maxind],materials,z,sig)
 
 	;inizia il ciclo e ottimizza la fom per ogni angInd
 	bestTVec=fltarr(n_elements(th))
@@ -26,7 +26,7 @@ function opt_Rifle,th, lam,materials,z,sigma,E_range,c_mat,t_points=t_points,t_r
 		best_fom=0
 		best_t=100.
 		for i=0,t_points-1 do begin
-			R_coated=Rifle(th[angInd], lam[minind:maxind],materials,z,sig,t_vec[i],c_mat)
+			R_coated=Reflex_IMD(th[angInd], lam[minind:maxind],materials,z,sig,t_vec[i],c_mat)
 			fom=total((R_coated^2-R_bare[angInd,*]^2)/R_bare[angInd,*]^2)
 			if fom gt best_fom then begin
 				best_fom=fom
@@ -35,7 +35,7 @@ function opt_Rifle,th, lam,materials,z,sigma,E_range,c_mat,t_points=t_points,t_r
 			;print,fom
 		end
 		bestTVec[angInd]=best_t
-		bestR[angInd,*]=Rifle(th[angInd], lam,materials,z,sig,best_t,c_mat)
+		bestR[angInd,*]=Reflex_IMD(th[angInd], lam,materials,z,sig,best_t,c_mat)
 	end
 	print, bestTvec
 	return,bestR
