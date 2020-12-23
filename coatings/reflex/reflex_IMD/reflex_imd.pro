@@ -3,9 +3,12 @@
 ; REFLEX_IMD
 ;
 ; PURPOSE:
-; Wrapper for IMD fresnel function. Launch with material names instead of
+; Return reflectivity matrix [Nang,Nen] from list of materials names (one per layer), list of thicknesses,
+; list of rougness in angstrom, and optional overcoating descriptors.
+; Wrapper atound IMD fresnel function. Launched with material names instead of
 ; refracion indices. Not very efficient if you have to call it many times
 ; as it has to read index files every time is called (as opposite to directly call FRESNEL).
+; IMD must be installed and started with .run imdstart.
 ;
 ; CATEGORY:
 ; Reflex
@@ -20,36 +23,34 @@
 ;               measured from the normal 
 ; Lam: Scalar or 1-D array of wavelengths.  Units for LAMBDA
 ;                are the same as for Z and SIGMA.
-; Materials: vector of strings with material names.
+; Materials: vector of strings with material names for all layers
+;      starting from top and including substrate.
 ; Z: 1-D array of layer thicknesses. Units for Z are the same
-;           as for SIGMA and LAMBDA.
+;           as for SIGMA and LAMBDA. Starts from top, doesn't include
+;           substrate
 ; Sigma: Scalar, 1D or 3D array of interface widths.  If SIGMA
-;               is a scalar, then the same roughness value is applied
-;               to each interface.  If SIGMA is a 1-D array, it must
-;               have (N_ELEMENTS(Z)+1) elements, corresponding to the
-;               number of interfaces in the stack.  If SIGMA is a 3-D
-;               array, it must have
-;               (N_ELEMENTS(THETA),N_ELEMENTS(LAMBDA),N_ELEMENTS(Z)+1)
-;               elements. Units for SIGMA are the same as for LAMBDA
-;               and Z.
+;             is a scalar, then the same roughness value is applied
+;             to each interface.  If SIGMA is a 1-D array, it must
+;             have (N_ELEMENTS(Z)+1) elements, corresponding to the
+;             number of interfaces in the stack.  If SIGMA is a 3-D
+;             array, it must have
+;             (N_ELEMENTS(THETA),N_ELEMENTS(LAMBDA),N_ELEMENTS(Z)+1)
+;             elements. Units for SIGMA are the same as for LAMBDA
+;             and Z.
 ;
 ; OPTIONAL INPUTS:
-; c_thick: thickness of optional overcoating
-; c_mat: string, material of optional overcoating, must match a IMD optical constant file without nk extension.
-;
+; c_thick (*): thickness of optional overcoating
+; c_mat (*): string, material of optional overcoating, must match a IMD optical constant file without nk extension.
+; (* obsolete, for backwards compatibility, will be removed)
+; 
 ; OUTPUTS:
-; Return reflectivity from list of materials names (one per layer), list of thicknesses,
-; list of rougness in angstrom, and optional overcoating descriptors.
-; R[n,*] is reflectivity as a function of energy.
-;
-; SIDE EFFECTS:
-; Describe "side effects" here.  There aren't any?  Well, just delete
-; this entry.
+; Return reflectivity matrix [Nang,Nen]. R[n,*] is reflectivity as a function of energy.
 ;
 ; RESTRICTIONS:
-; IMD functions must be loaded before with .run IMD
+; IMD must be installed and its functions must be loaded before with .run IMD
 ; Indices are loaded every time the function is called, so it might be not optimally
-;   efficient.
+;   efficient. A more efficient way is to load indices using LOAD_NC(lam, materials) 
+;   then call FRESNEL directly
 ;
 ; PROCEDURE:
 ; Return reflectivity from list of materials names (one per layer), list of thicknesses,
@@ -58,22 +59,14 @@
 ;   this doesn't seem to work, load them by calling .run IMD in command line before RIFLE
 ;   and closing all windows (there might be a IMD or IDL option to avoid windows at all).
 ;
-; EXAMPLE:
-
-;
 ; MODIFICATION HISTORY:
 ;   2020/06/14 renamed to REFLEX_IMD from Reflex_IMD
 ;   2019/03/25 moved to independent file from reflex_funk_beta
-;   
-;   Written by: Vincenzo Cotroneo, Date.
-;   Harvard-Smithsonian Center for Astrophysics
-;   60, Garden street, Cambridge, MA, USA, 02138
-;   vcotroneo@cfa.harvard.edu
 ;
 ;   Written by: Vincenzo Cotroneo, Date.
 ;   INAF/Brera Astronomical Observatory
 ;   via Bianchi 46, Merate (LC), 23807 Italy
-;   vincenzo.cotroneo@brera.inaf.it
+;   vincenzo.cotroneo@inaf.it
 ;
 ;-
 
@@ -132,6 +125,7 @@ end
 ;       Z - 1-D array of layer thicknesses. Units for Z are the same
 ;           as for SIGMA and LAMBDA.
 ;
+
 alpha=90.-1.3425 ;[1.8517,1.3425,0.5440]
 en_vec=5d*(findgen(100))/100.+0.5
 lam=12.398425/en_vec  ;entrano le energie in keV, le devo converire in A
@@ -161,15 +155,16 @@ plot,en_vec,r_bare,yrange=[0,1]
 oplot,en_vec,r_coated,color = 2
 oplot,en_vec,r_ml, color=3
 
-legend,['Au','Au+C','Pt/C multilayer'],color=[1,2,3]
+legend,['Au','Au+C','Pt/C multilayer'],color=[1,2,3],position=12
 
 ;compare with direct fresnel formula
 nkpath='C:\Users\kovor\Documents\IDL\user_contrib\imd\nk'
-;r2=reflex2D_IRT(energy,!PI/180.*(90.-alpha),nkpath+path_sep()+mat+'.nk')
-;oplot,en_vec,r2,color=2,psym=1
-;wshow
+r2=reflex2D_IRT(en_vec,!PI/180.*(90.-alpha),nkpath+path_sep()+mat+'.nk')
+oplot,en_vec,r2,color=4,psym=1
+legend,['Au with IRT'],color=4,position=11
+wshow
 
-;window,1
-;plot,en_vec,r_bare-r2,title='Difference IMD - IRT'
+window,1
+plot,en_vec,r_bare-r2,title='Difference IMD - IRT'
 
 end
