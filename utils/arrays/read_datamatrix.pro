@@ -1,9 +1,11 @@
 function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
-          nrows=nrows,ncols=n_col,delimiter=delimiter,numline=nl,$
+          delimiter=delimiter,numline=nl,$
           header=header,type=type,stripblank=strip,x=x,y=y,comment=comment
 
-; the number of columns is determined by last line read.
-;return a matrix of string [ncols,nrows]. NROWS and NCOLS are output parameters.
+; Read a matrix from file to an array. 
+; It must be flexible e.g. to be used in place of READCOL when the number of columns 
+; is not known in advance. Number of columns is determined by last valid line read.
+; return a matrix of strings (as default, it can be changed with TYPE option).
 
 ;added all options. N.B. The code for FIELDWIDTH is missing, but I don't remember
 ; what the option was for (this also could mean that the option is not so useful).
@@ -15,7 +17,12 @@ function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
 ; of the characters in the vector. 
 ; X and Y optional return argument, if variable is passed, get from stripping first row and columns
 
-;If STRIPBLANK is set, blank lines are ignored
+;NUMLINE: maximum number of lines to be read after the header.
+;
+;If STRIPBLANK is set, blank lines are ignored (default TRUE)
+;
+;2020/12/27 completely rewritten and tested.
+;2020/12/27 corrected bug on COMMENT (failing if not set). 
 ;2019/05/01 added x and y optional return argument, if present, strip from matrix first row and col. 
 
 ;2013/02/09 added keyword type. 
@@ -43,72 +50,54 @@ function READ_DATAMATRIX, file,skipline=skip,fieldwidth=fieldwidth, $
 ; if it is white the reading is wrong. The bug could be always existing or introduced
 ; in last week.
 ; Added STRIPBLANK flag
-; author: Giorgia Sironi
-; modified by Vincenzo Cotroneo
+; author: Vincenzo Cotroneo
 
 if n_elements(skip) eq 0 then s=0 else s=skip
-;read file, determine number of columns from the last line
+if n_elements(strip) eq 0 then strip = 1
+
+;read file in array of lines
 OPENR, unit0, file, /GET_LUN
-lines= strarr(1)
+ll = strarr(1) ; single line
+lines = []; strarr(1)  ; all lines
 i=0L
 while ~ EOF(unit0) do begin
-  READF,unit0 , lines
-  if i lt s then s=s-1 else begin  
-    if strlen(strtrim(lines,2)) ne 0 then lastline=lines
-    ;ignore comments
-    if n_elements(comment) ne 0 then $
-      if in(strmid(strtrim(lines,2),0,1),comment) ne 1 then $
-        if keyword_set(strip) eq 0 or strlen(strtrim(lines,2)) ne 0 then i=i+1
-  endelse
+  READF,unit0 , ll
+  if strlen(strtrim(ll,2)) ne 0 then lastline=ll
+  lines=[[lines],[ll]]
 endwhile
 free_lun, unit0
-
 ;if n_elements(separator) eq  0 then separator=' ' do not work with tab
-nrows=i
+
+;skip and read header 
+if arg_present(header) then header=lines[0:s-1]
+lines=lines[s:*]
+
+;trim final lines redefining LINES and NROWS
+if n_elements(nl) ne 0 then $
+  if n_elements(lines) gt nl then lines = lines[0:s-1]
+nrows=n_elements(lines)
+
+;calculate ncols from last good line
 if n_elements(delimiter) eq 0 then ncols=n_elements(strsplit(lastline)) $
-    else ncols=n_elements(strsplit(lastline,delimiter))
-data=strarr(ncols,nrows)
+else ncols=n_elements(strsplit(lastline,delimiter))  ;delimiter can be updated to use regex
 
-;create matrix and load lines in columns (the first index rotates first,
+;create matrix and load ll in columns (the first index rotates first,
 ; it is first to address with * on first index)
-OPENR, unit0, file, /GET_LUN
-;skip lines
-if arg_present(header) then header=[] ; the if is needed to not initialize 
-; the variable if it was undefined.
-for i=1L,skip do begin
-  READF,unit0 , lines
-  if arg_present(header) then header=[header,lines]
-endfor
-i=0L
-if n_elements(nl) eq 0 then numline= nrows+1 else numline=nl
-while ~ EOF(unit0) and i lt numline do begin
-  READF,unit0 , lines
-  if strlen(strtrim(lines,2)) ne 0 then begin
-    ;ignore comments
-    if n_elements(comment) ne 0 then begin
-      if in(strmid(strtrim(lines,2),0,1),comment) ne 1 then begin   
-        if n_elements(fieldwidth) eq 0 then begin
-          if n_elements(delimiter) eq 0 then split=strsplit(lines,/extract) $
-          else split=strsplit(lines,/extract,delimiter)
-          data[*,i]=split
-          i=i+1
-        endif else begin
-          message,"if you want to use fieldwidth option, finish to write the code!"
-          for n=0,fix(strlen(lines)/fieldwidth)+1 do begin
-          endfor
-        endelse  
-      endif   
+;data=strarr(ncols,nrows)
+data=[]
+foreach ll, lines do begin
+  ;ignore comments
+  if n_elements(comment) eq 0 || in(strmid(strtrim(ll,2),0,1),comment) ne 1 then begin
+    if keyword_set(strip) eq 0 or strlen(strtrim(ll,2)) ne 0 then begin
+      if n_elements(delimiter) eq 0 then split=strsplit(ll,/extract) $
+        else split=strsplit(ll,/extract,delimiter)
+        ;data[*,i]=split
+        if n_elements(split) ne ncols then split=replicate(split,ncols) ; for white lines if strip=0
+        data=[[data],[split]]
     endif
-  endif else begin
-    ;line was white
-    if keyword_set(strip) eq 0 then begin
-      data[*,i]=lines ;there are no separator, so the scalar element lines is replicated
-      i=i+1
-    endif
-  endelse
-endwhile
+  endif
+endforeach
 
-free_lun, unit0
 if arg_present(x) then begin
   x=data[*,0]
   data=data[*,1:*]
@@ -120,4 +109,5 @@ if arg_present(y) then begin
 endif
 if n_elements(type) ne 0 then data=fix(data,type=type)
 return,data
+
 end
