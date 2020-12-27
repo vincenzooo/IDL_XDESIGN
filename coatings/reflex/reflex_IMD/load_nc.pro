@@ -1,11 +1,12 @@
 ;load refraction indices using IMD function (moved here from refle_funk_beta. 
 ; call .run imdstart (or .run IMD and close all windows) before running this code, prompt should change to IMD>
 
-function load_nc,lam, matlist,c_mat,medium=medium
+function load_nc,lam, matlist,c_mat,medium=medium,mat_hash=mat_hash
   ;+
   ;load refraction indices from IMD optical constant for all 
   ;  materials in stack for a list of wavelengths.
-  ;  return a complex matrix Nmat+1 x Nlam.
+  ;  return a complex matrix Nmat+1 x Nlam in format compatile with IMD
+  ;  FRESNEL routine.
   ;  
   ;  to load the IMD code needed, call .run imd and close all windows
   ;  (or .run IMDstart if present) .
@@ -21,6 +22,9 @@ function load_nc,lam, matlist,c_mat,medium=medium
   ;     but it is kept for backwards compatibility.
   ;  medium is usually vacuum, user can optionally provide a list of complex
   ;     refraction indices (same length as lam).
+  ;  mat_hash: used to output the refraction indices hash, useful to recalculate
+  ;     reflectivity without reading optical constant file (e.g. if number or order of
+  ;     layers changes).
   ;
   ;2020/12/23 modified for faster reading in case of repeated material multilayer, 
   ;   each material is read only once.
