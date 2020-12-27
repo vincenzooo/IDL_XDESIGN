@@ -9,10 +9,12 @@ I don't exclude to do more clean up and generate some documentation if I will ha
 The code is mostly about three areas:
 ## Coatings
 Contains coating for reflectivity simulation and modelling of reflective coatings (single or multi-layer).
-Work on this old code was restarted on 2019 for a project about ray-tracing and design of optics. 
+
 `Reflex`contains several examples of reflectivity calculation (using IMD library, using external dll and a simpler pure IDL implementation).
 Each one of these was working at some point in history, but doesn't have a common interface or usage. 
+Work on this old code was restarted on 2019 for a project about ray-tracing and design of optics.
 NEWS Dec 2020: IMD based routines are fully functional, can handle arbitrary layer structures and models (any model that IMD can implement), but requires IMD installation, and it is not exceptionally fast. Pure IDL routines work on monolayer coatings.
+
 `Multilayer` and `Overcoating` contain dependent functions for optimization of multilayer and bilayer coatings and for comparison and visualization of performances for different coatings. Some parts might still depend on older versions of the reflectivity functions, however the most important of them have been updated or should be easily adaptable.
 
 ## Telescopes
