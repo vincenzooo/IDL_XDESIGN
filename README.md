@@ -8,10 +8,12 @@ I don't exclude to do more clean up and generate some documentation if I will ha
 
 The code is mostly about three areas:
 ## Coatings
-NEW 2019: This is old code on which I recently started working again for a project about ray-tracing and design of optics. 
-`Reflex`contains several examples of reflectivity calculation (using IMD library, using external dll and a simpler pure IDL implementation)
-Each one of these was working at some point in history, but doesn't have a common interface or usage. At the moment the library is quite messy, as I am still figuring out what part of it is doing, but things are getting sorted out.
-`Multilayer` and `Overcoating` contain dependent functions for optimization of multilayer and bilayer coatings and for comparison and visualization of performances for different coatings. 
+Contains coating for reflectivity simulation and modelling of reflective coatings (single or multi-layer).
+Work on this old code was restarted on 2019 for a project about ray-tracing and design of optics. 
+`Reflex`contains several examples of reflectivity calculation (using IMD library, using external dll and a simpler pure IDL implementation).
+Each one of these was working at some point in history, but doesn't have a common interface or usage. 
+NEWS Dec 2020: IMD based routines are fully functional, can handle arbitrary layer structures and models (any model that IMD can implement), but requires IMD installation, and it is not exceptionally fast. Pure IDL routines work on monolayer coatings.
+`Multilayer` and `Overcoating` contain dependent functions for optimization of multilayer and bilayer coatings and for comparison and visualization of performances for different coatings. Some parts might still depend on older versions of the reflectivity functions, however the most important of them have been updated or should be easily adaptable.
 
 ## Telescopes
 This is a collection of utilities for the calculation of effective area of a telescope, on axis and off-axis. As for coating, I recently restarted working on this and I am working on recovering and cleaning the relevant part (a large part of the code deals with reading the output of previous fortran code). 
