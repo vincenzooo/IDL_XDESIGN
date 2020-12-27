@@ -12,7 +12,7 @@ pro setPlotOutput,close=close,psfile=psfile,window=w,noplot=noplot
 ;if CLOSE is set, close psfile as ps
 ;if PSFILE is set a ps file is opened with that name and extension '.eps' appended.
 ;If it is not passed, a window is opened. The number of the window can be passed
-;in WINDOW, if it is not a new window is opened. 
+;in WINDOW, a new window is opened if not already open. 
 
     if keyword_set(close) then begin
        if keyword_set(psfile) ne 0 then ps_end
