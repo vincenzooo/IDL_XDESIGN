@@ -23,7 +23,7 @@ function colors_band_palette, Vmin, Vmax, Colors, pmin=pmin, pmax=pmax,$
     ;
     ; The bands are built in a way such that a given reference value (default=0) 
     ;   is on the separation between different bands.
-    ; Normally (if /noreverse is not set) the gradient is reversed for values lower 
+    ; Normally (unless /noreverse is set) the gradient is reversed for values lower 
     ;   than the zero level (this leads to darker colors for higher absolute values).
     ;
     ; CATEGORY:
@@ -220,6 +220,7 @@ end
  print,transpose([[findgen(!D.TABLE_SIZE)],[ct1]]) ;print: index, R, G, B
  cindex  ;if David Fanning routine is present, show colors and index in palette.
  print,"-----------------"
+ 
  ;loading a single extracolor 
  ct1=colors_band_palette(min(values),max(values),pmin=101,pmax=200,$
       bandvalsize=20,/load,extracolors=[10,30,31,32])
