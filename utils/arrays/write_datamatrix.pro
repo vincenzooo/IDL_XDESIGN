@@ -8,6 +8,7 @@ pro write_datamatrix,file,d,header=header,x=x,y=y,padding=padding,$
 ; is used to fill the first row-first column element).
 ; if STRICT is set, gives error for empty array, otherwise write empty file 
 ; possibly with header. 
+; 2021/01/05 corrected bug on nrows that was including also header, cutting data.
 ; 2019/03/13 added option STRICT.
 ;-
 if size(file,/type) ge 1 and size(file,/type) le 5 then filenum=file 
@@ -67,7 +68,7 @@ if n_elements(Y) ne 0 then begin
   data=[transpose(yy),data]
 endif
 
-for j=0,nrow-1 do begin
+for j=0,nrow+n_elements(header)-1 do begin
   printf,nfile,strjoin(data[*,j],sep)
 endfor
 if n_elements(filenum) eq 0 then free_lun,nfile
