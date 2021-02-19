@@ -16,7 +16,7 @@ function load_nc,lam, matlist,c_mat,medium=medium,mat_hash=mat_hash
   ;  lam is vector wavelengths in angstrom
   ;  matlist is the list of materials (name of IMD optical constant file stripped
   ;    of extension, typically material name like 'Ir', 'Pt' etc.),
-  ;    from surface to substrate. Matching optical constants files must be present
+  ;    from surface to substrate (included). Matching optical constants files must be present
   ;    in imd_nk folder of IMD.
   ;  c_mat (string with overcoating material) is unnecessary, 
   ;     but it is kept for backwards compatibility.

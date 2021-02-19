@@ -127,7 +127,8 @@ end
 
 pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
   ntracks=ntracks,perc_gain=pgain,area_gain=area_gain,telescopes=telescopes,$
-  window=ww,extracolors=ec,min_value=min_value,max_value=max_value
+  window=ww,extracolors=ec,min_value=min_value,max_value=max_value,$
+  _extra=e
 
   ;generate a 3d plot of gain statistics
   ;R[n,*] e' la riflettivita' in funzione dell'energia
@@ -177,6 +178,8 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
   titpostfix = n_elements(filename) eq 0? '' : ' for ' + file_basename(filename)
     
   pal=colors_band_palette(min(pgain), max(pgain), colors, pmin=32, pmax=254,bandvalsize=0.01,extracolors=ec,/TEK,/LOAD)
+  !P.color=255 ; added 2021/02/18 to correct axis color, however there is still
+  ;  somethi
   cont_image,pgain,(90-th),en,/colorbar,min_value=min_value,max_value=max_value,$
     title='R^2 percentual gain'+titpostfix,bar_title='% gain [(R_coat^2-R_bare^2)/(R_bare^2)]',$
     xtitle='Incidence angle (deg)', ytitle='Energy (keV)'
@@ -220,31 +223,39 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
     ;IF ARG_present(ntracks) then ntracks=ntracks else ntracks=10
     pind=indgen(th_points)
     pind=pind[0:*:fix(th_points/ntracks)];vettore degli indici selezionati per il plot
+    multi_plot,en,transpose(r_bare[pind,*]),xtitle='Energy(keV)',$
+      yTitle='Reflectivity',back=cgcolor('white')
+    if n_elements(filename) ne 0 then maketif,filename+'_tracks'
+    
     if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww+2,xsize=600,ysize=400 else $
       if n_elements(filename) ne 0 then device,filename=filename+string(ww+2)+'.'+!D.name
-    ;multiplot,[1,3],mtitle=file_basename(filename),mxtitle='Energy ;(eV)',ygap=0.01  
     
-    multi_plot,en,transpose(r_bare[pind,*]),yTitle='Reflectivity',back=cgcolor('white')
-    plot,en,r_bare[pind[0],*],color=254, $  ;,yrange=[-10,100]
-      yTitle='Reflectivity'
+    multiplot,[1,3];,mtitle=file_basename(filename),mxtitle='Energy ;(eV)',ygap=0.01  
+    
+    yrb=range(r_bare)
+    plot,en,r_bare[pind[0],*],color=254,yrange=yrb, $ ;[-10,100]
+      yTitle='Reflectivity 2'
     for i=0,n_elements(pind)-1 do begin
-      oplot,en,r_bare[pind[i],*],color=col[i]
+      oplot,en,r_bare[pind[i],*],color=cgcolor(col[i])
     end
     multiplot
     
-    plot,en,r_coated[pind[0],*],color=254, $  ;,yrange=[-10,100]
-      yTitle='Reflectivity'
+    yrc=range(r_coated)
+    plot,en,r_coated[pind[0],*],color=254,yrange=yrc, $  ;,yrange=[-10,100]
+      yTitle='Reflectivity 1'
     for i=0,n_elements(pind)-1 do begin
-      oplot,en,r_coated[pind[i],*],color=col[i]
+      oplot,en,r_coated[pind[i],*],color=cgcolor(col[i])
     end
     multiplot
     
-    plot,en,pgain[pind[0],*],color=254, $  ;,yrange=[-10,100]
-      yTitle='Gain'
+    yrg=range(pgain)
+    plot,en,pgain[pind[0],*],color=254,yrange=yrg,  $  ;,yrange=[-10,100]
+      yTitle='Gain',xtitle='Energy(keV)'
     for i=0,n_elements(pind)-1 do begin
-      oplot,en,pgain[pind[i],*],color=col[i]
+      oplot,en,pgain[pind[i],*],color=cgcolor(col[i])
     end
-    legend,string(0.5+(90.-th[pind]),format="(F8.3)")+' deg',color=col,position=12
+    hor,0,color=cgcolor('white'),linestyle=2
+    legend,string(0.5+(90.-th[pind]),format="(F8.3)")+' deg',color=cgcolor(col),position=13,t_color=0
 
     if n_elements(filename) ne 0 then maketif,filename+'_2D'
     
@@ -265,7 +276,7 @@ b = b/max(b)
 an = findgen(20)+2
 en = findgen(10)*3
 
-plot_gain,an,en,a,b
+plot_gain,an,en,a,b,ntracks=4
 
 end
 
