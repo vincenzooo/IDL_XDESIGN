@@ -12,7 +12,7 @@ function coating_reflex,coat,lam,angles,roughness=roughness,lib=lib
   ;  return a 2d matrix (nangles,lam) with reflectivity
   ;-
   
-  if n_elements(lib) eq 0 then lib = 'IRT'
+  if n_elements(lib) eq 0 then lib = 'IMD'
   
   if n_elements(roughness) eq 0 then roughness =0
   
@@ -41,7 +41,7 @@ function coating_reflex,coat,lam,angles,roughness=roughness,lib=lib
     fresnel,90.-angles, lam, nc,z,sigma,ra=r_sel, mfc_model=1 ; mfc_model=1 for nevot-croce roughness
   endif else if lib eq 'IRT' then begin
     ;nc=load_nc(lam,materials)
-    r_sel=tref2d(lam,angles,coat)  ;replace with reflex2D_IRT
+    r_sel=tref2d(12.398/lam,angles*!PI/180.,coat)  ;replace with reflex2D_IRT
     ;message,"library IRT not implemented yet"
   endif else if lib eq 'dll' then begin
     message,"library dll not implemented yet"
@@ -57,16 +57,16 @@ cd,programrootdir()
 ;roughness=4.
 ;off_axis=!NULL
 
-nkpath='C:\Users\kovor\Documents\IDL\user_contrib\imd\nk'
+nkpath='..\..\..\user_contrib\imd\nk'
 
 alpha=1.3425 ;[1.8517,1.3425,0.5440]
 energy=5d*(findgen(100))/100.+0.5
 lam=12.398/energy
 
 
-coat=nkpath+path_sep()+'Ir.nk'
-ref=coating_reflex(coat,lam,alpha)
-plot,energy,ref[*,0],yrange=[0,1]
+coat=nkpath+path_sep()+'Ir'
+ref=coating_reflex(coat,lam,alpha, lib ='IMD')
+plot,energy,ref ;;[*,0]  ;,yrange=[0,1]
 
 
 ;z=[80.,300.]

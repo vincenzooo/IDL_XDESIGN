@@ -35,11 +35,17 @@ mat=Pt     ;mat
 extracol=[[0,0,0,0],[255,255,255,255]]
 setstandarddisplay
 set_plot, 'win'
+cd, programrootdir()
+
+outfolder = 'test'+path_sep()+'oc_analysis'
+file_mkdir,outfolder
 
 ;-------------------------------------
 ;generate the 3d plot of angle-energy gain
-oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
- ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated,optimize=1,besttvec=besttvec
+oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',[20.,70.],$ ;perc_s=perc_gain,area_gain=area_gain,ener=ener,theta=theta,$
+  r_bare=r_bare,r_coated=r_coated,optimize=1,besttvec=besttvec
+ 
+ 
 ; oc_analysis ,mat,[0,2.0],[0.1,10.],'a-C',80.,perc_gain=perc_gain,area_gain=area_gain,$
 ;   ener=ener,theta=theta,r_bare=r_bare,r_coated=r_coated
  ;oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=area_gain,$
@@ -49,7 +55,7 @@ oc_analysis ,mat,hxmt.angles,hxmt.energy,'a-C',perc_gain=perc_gain,area_gain=are
 set_plot,'ps'
 Device, COLOR=1, BITS_PER_PIXEL=8
 ;device , FILEname=mat.filename+'.ps'
-plot_gain,theta,ener,R_coated,R_bare,mat.density,filename=mat.filename,$
+plot_gain,theta,ener,R_coated,R_bare,mat.density,filename=outfolder+path_sep()+mat.filename,$
   perc_gain=perc_gain, area_gain=area_gain,telescopes=telescopes,$
   window=3,extracolors=extracol
 device, /close
@@ -58,13 +64,13 @@ set_plot, 'win'
 print,bestTVec
 window,2
 plot,bestTVec
-maketif,mat.filename+'_thick'
+maketif,fnaddsubfix(mat.filename,'_thick','',pre=outfolder+path_sep())
 
 ;PLOT SLICES OF SQUARE REFLECTIVITY AND PERCENTUAL GAIN FOR FIXED ANGLE
 ;-------------------------------
 set_plot, 'PS'
 ;window,8
-device , FILE='reflex2_0.7deg.ps'
+device , FILE=outfolder+path_sep()+'reflex2_0.7deg.ps'
 i_th07=max(where(90.-theta lt 0.7))
 pgain=100*(R_coated^2-R_bare^2)/R_bare^2
 
@@ -80,7 +86,7 @@ device,/close
 ;  title='Square reflectivity vs energy at 0.7 deg',name="Pt + C(80 A)")
 ;plot(ener,R_bare[i_th07,*]^2,color=100,linestyle=2,/overplot,name="Pt")
 
-device , FILE='gain2_0.7deg.ps'
+device , FILE=outfolder+path_sep()+'gain2_0.7deg.ps'
 ysize_st=!D.Y_SIZE
 device,ysize=5
 plot,  ener,pgain[i_th07,*],ytitle='% Gain',xtitle='Energy (keV)'
@@ -94,14 +100,14 @@ device,/close
 ;PLOT SLICES OF SQUARE REFLECTIVITY AND PERCENTUAL GAIN FOR FIXED ENERGY 
 ;-------------------------------
 set_plot, 'PS'
-device , FILE='reflex2_4.5keV.ps'
+device , FILE=outfolder+path_sep()+'reflex2_4.5keV.ps'
 i_en4500=max(where(ener lt 4.5))
 
 plot, ener,R_coated[*,i_en4500]^2,xtitle='Incidence angle (deg)',ytitle='Square reflectivity'
 oplot, ener,R_bare[*,i_en4500]^2,color=100,linestyle=2
 legend,["Pt","Pt + C(80 A)"],position=12,color=[!P.color,100]
 device,/close
-device , FILE='gain2_4.5keV.ps'
+device , FILE=outfolder+path_sep()+'gain2_4.5keV.ps'
 
 ysize_st=!D.Y_SIZE
 device,ysize=5
@@ -118,7 +124,7 @@ device,/close
 set_plot, 'PS'
 ;window,8
 
-device , FILE='gain2acoll_0.7deg.ps'
+device , FILE=outfolder+path_sep()+'gain2acoll_0.7deg.ps'
 ysize_st=!D.Y_SIZE
 device,ysize=5
 plot,  ener,area_gain[i_th07,*]*100.,ytitle='Gain (% Acoll)',xtitle='Energy (keV)'
@@ -130,7 +136,7 @@ device,/close
 
 ;-------------------------------
 set_plot, 'PS'
-device , FILE='gain2acoll_4.5keV.ps'
+device , FILE=outfolder+path_sep()+'gain2acoll_4.5keV.ps'
 ysize_st=!D.Y_SIZE
 device,ysize=5
 plot,  90-theta,area_gain[*,i_en4500]*100,ytitle='Gain (% Acoll)',xtitle='Incidence angle (deg)'
@@ -142,7 +148,7 @@ device,/close
 
 ;-------------------------------
 set_plot, 'PS'
-device , FILE='gain2acoll_3.0keV.ps'
+device , FILE=outfolder+path_sep()+'gain2acoll_3.0keV.ps'
 ysize_st=!D.Y_SIZE
 i_en3000=max(where(ener lt 3.0))
 device,ysize=5

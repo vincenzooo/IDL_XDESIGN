@@ -69,12 +69,12 @@ free_lun, unit0
 ;if n_elements(separator) eq  0 then separator=' ' do not work with tab
 
 ;skip and read header 
-if arg_present(header) then header=lines[0:s-1]
+if arg_present(header) then header=lines[0:max([s-1,0])]
 lines=lines[s:*]
 
 ;trim final lines redefining LINES and NROWS
 if n_elements(nl) ne 0 then $
-  if n_elements(lines) gt nl then lines = lines[0:s-1]
+  if n_elements(lines) gt nl then lines = lines[0:max([s-1,0])]
 nrows=n_elements(lines)
 
 ;calculate ncols from last good line

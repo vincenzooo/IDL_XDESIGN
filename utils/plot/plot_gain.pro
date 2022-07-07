@@ -60,6 +60,9 @@
 ;   Revision from old code (probably 2010?).
 ;-
 
+;FIXME: irregularities in plot outputs, see test_oc_analysis
+;maketif are not plotted, the mechanism for terminal selection is unclear.
+
 pro plot_rect,telescopes ,window_num, _extra=e
   ;+
   ;  telescopes is a list of telescope (can be empty or null), each one in format
@@ -174,7 +177,7 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
   ; also I may want to plot only on screen (no output generation)
   if n_elements (ww) eq 0 then ww=4 ;getwfree()
   if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww,xsize=600,ysize=400 else $
-    if n_elements(filename) ne 0 then device,filename=filename+string(ww)+'.'+!D.name
+    if n_elements(filename) ne 0 then device,filename=filename+strtrim(string(ww),2)+'.'+!D.name
   titpostfix = n_elements(filename) eq 0? '' : ' for ' + file_basename(filename)
     
   pal=colors_band_palette(min(pgain), max(pgain), colors, pmin=32, pmax=254,bandvalsize=0.01,extracolors=ec,/TEK,/LOAD)
@@ -193,7 +196,7 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
   ;-------------------------------------------
   ;plot color map of area gain on window ww+1 (or file filenameww)
   if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww+1,xsize=600,ysize=400 else $
-    if n_elements(filename) ne 0 then device,filename=filename+string(ww+1)+'_a.'+!D.name
+    if n_elements(filename) ne 0 then device,filename=filename+strtrim(string(ww+1),2)+'_a.'+!D.name
   ;   colors1=[[[50,0,0],[255,0,0]],$
   ;   [[0,50,0],[0,255,0]],$
   ;   [[0,0,50],[0,0,255]],$
@@ -223,12 +226,13 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
     ;IF ARG_present(ntracks) then ntracks=ntracks else ntracks=10
     pind=indgen(th_points)
     pind=pind[0:*:fix(th_points/ntracks)];vettore degli indici selezionati per il plot
-    multi_plot,en,transpose(r_bare[pind,*]),xtitle='Energy(keV)',$
-      yTitle='Reflectivity',back=cgcolor('white')
+    leg = string(0.5+(90.-th[pind]),format="(F8.3)")+' deg'
+multi_plot,en,transpose(r_bare[pind,*]),xtitle='Energy(keV)',$
+      yTitle='Reflectivity',back=cgcolor('white'),legend=leg
+    ;outputs  
     if n_elements(filename) ne 0 then maketif,filename+'_tracks'
-    
     if !D.Name eq 'WIN' || !D.Name eq 'X' then window,ww+2,xsize=600,ysize=400 else $
-      if n_elements(filename) ne 0 then device,filename=filename+string(ww+2)+'.'+!D.name
+      if n_elements(filename) ne 0 then device,filename=filename+strtrim(string(ww+2),2)+'.'+!D.name
     
     multiplot,[1,3];,mtitle=file_basename(filename),mxtitle='Energy ;(eV)',ygap=0.01  
     
@@ -255,7 +259,7 @@ pro plot_gain,th,en,R_coated,R_bare,density,filename=filename,$
       oplot,en,pgain[pind[i],*],color=cgcolor(col[i])
     end
     hor,0,color=cgcolor('white'),linestyle=2
-    legend,string(0.5+(90.-th[pind]),format="(F8.3)")+' deg',color=cgcolor(col),position=13,t_color=0
+    legend,leg,color=cgcolor(col),position=13,t_color=0
 
     if n_elements(filename) ne 0 then maketif,filename+'_2D'
     

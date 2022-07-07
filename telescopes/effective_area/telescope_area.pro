@@ -15,7 +15,7 @@
 ; Result = TELESCOPE_AREA(Energy,Alpha,Acoll,Coatings)
 ;
 ; INPUTS:
-; Energy: vector of energies on which to calculate effective area.
+; Energy: vector of energies in keV on which to calculate effective area.
 ; Alpha: vector with shell slope in degrees for each shell
 ; Acoll: vector with collecting area for each shell
 ; Coatings: vector with strings describing coatings for each of the shells,
@@ -73,13 +73,13 @@ function reflexshells,coatings,alpha,lam,roughness=roughness
   ;cc list of coating for each shell
   cc = n_elements(coatings) eq 1? replicate(coatings,n_elements(alpha)):coatings
 
-  coatingslist=coatings[uniq(cc)]
+  coatingslist=cc[uniq(cc)]
   reflex_m=dblarr(n_elements(alpha),n_elements(lam))
 
   foreach coat, coatingslist do begin
     ish_sel=where(cc eq coat,c)
     if c ne 0 then $
-      reflex_m[ish_sel,*]= coating_reflex(coat,lam,alpha[ish_sel],roughness=roughness)
+      reflex_m[ish_sel,*]= coating_reflex(coat,lam,alpha[ish_sel],lib='IMD',roughness=roughness)
   endforeach
   return, reflex_m
 end
@@ -104,8 +104,7 @@ end
 ;infolder contains telescope_geometry.dat and telescope_geometry_info, from which relevant geometrical
 ;  information acoll, angle and coating, are extracted.
 
-
-
+cd, programrootdir()
 outfolder='test/results/test_telescope_area/cubex_24shells_01/Config001'
 
 file_mkdir,file_dirname(outfolder)
